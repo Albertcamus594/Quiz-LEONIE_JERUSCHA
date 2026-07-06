@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz de révision civique — préparé par AC</title>
+  <style>
+    :root {
+      --bg-1: #0f172a;
+      --bg-2: #1e293b;
+      --card: rgba(255, 255, 255, 0.94);
+      --text: #111827;
+      --muted: #64748b;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #0f766e;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --border: #e5e7eb;
+      --soft: #f8fafc;
+      --radius: 22px;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, 0.45), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(15, 118, 110, 0.35), transparent 34%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      padding: 18px;
+    }
+
+    button, input, select { font: inherit; }
+
+    .app {
+      width: min(100%, 980px);
+      margin: 0 auto;
+    }
+
+    .topbar {
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 12px 0 18px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #60a5fa, #14b8a6);
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      flex: 0 0 auto;
+    }
+
+    .topbar-title { min-width: 0; }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: clamp(18px, 4.5vw, 30px);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .topbar p {
+      margin: 5px 0 0;
+      color: rgba(255,255,255,0.78);
+      font-size: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.65);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(14px);
+    }
+
+    .screen { display: none; padding: clamp(20px, 5vw, 36px); }
+    .screen.active { display: block; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    @media (max-width: 780px) {
+      .hero { grid-template-columns: 1fr; }
+      .topbar { align-items: flex-start; }
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      background: #eff6ff;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(28px, 7vw, 50px);
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(15px, 3.8vw, 18px);
+      margin: 18px 0 0;
+      line-height: 1.65;
+    }
+
+    .info-box {
+      background: linear-gradient(180deg, #ffffff, #f8fafc);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 18px;
+    }
+
+    .info-box h3 { margin: 0 0 12px; }
+
+    .info-list {
+      display: grid;
+      gap: 10px;
+      color: #334155;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .info-list li {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      margin-top: 9px;
+      flex: 0 0 auto;
+    }
+
+    .form-grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 800;
+      color: #334155;
+      margin-bottom: 7px;
+    }
+
+    .field input, .field select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 14px;
+      background: white;
+      color: var(--text);
+      outline: none;
+    }
+
+    .field input:focus, .field select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 17px;
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      min-height: 48px;
+    }
+
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: white; box-shadow: 0 14px 30px rgba(37, 99, 235, 0.28); }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: var(--secondary); color: white; }
+    .btn-ghost { background: #f1f5f9; color: #0f172a; border: 1px solid var(--border); }
+    .btn-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; box-shadow: none; }
+
+    .quiz-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .progress {
+      height: 10px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width .28s ease;
+    }
+
+    .question-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: clamp(18px, 5vw, 26px);
+    }
+
+    .question-title {
+      font-size: clamp(21px, 5vw, 31px);
+      letter-spacing: -0.03em;
+      line-height: 1.18;
+      margin: 0 0 18px;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 15px;
+      cursor: pointer;
+      color: #1f2937;
+      min-height: 54px;
+    }
+
+    .option:hover { border-color: #93c5fd; background: #eff6ff; }
+    .option.selected { border-color: var(--primary); background: #dbeafe; }
+    .option.correct { border-color: var(--success); background: #dcfce7; color: #14532d; }
+    .option.wrong { border-color: var(--danger); background: #fee2e2; color: #7f1d1d; }
+
+    .explanation {
+      display: none;
+      margin-top: 18px;
+      padding: 14px;
+      border-left: 5px solid var(--primary);
+      border-radius: 14px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      line-height: 1.55;
+    }
+
+    .explanation.show { display: block; }
+
+    .quiz-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (max-width: 820px) {
+      .results-grid { grid-template-columns: 1fr; }
+    }
+
+    .score-box {
+      background: linear-gradient(180deg, #eff6ff, #ffffff);
+      border: 1px solid #bfdbfe;
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      position: sticky;
+      top: 18px;
+    }
+
+    @media (max-width: 820px) {
+      .score-box { position: static; }
+    }
+
+    .score-number {
+      font-size: clamp(58px, 18vw, 88px);
+      line-height: 1;
+      letter-spacing: -0.08em;
+      color: var(--primary);
+      font-weight: 950;
+      margin: 12px 0 8px;
+    }
+
+    .score-message {
+      color: #334155;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .review-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .review-item {
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 16px;
+      padding: 15px;
+    }
+
+    .review-item.good { border-left: 6px solid var(--success); }
+    .review-item.bad { border-left: 6px solid var(--danger); }
+
+    .review-item h4 {
+      margin: 0 0 9px;
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .answer-line {
+      margin: 5px 0;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      margin-left: 5px;
+    }
+
+    .pill.good { background: #dcfce7; color: #166534; }
+    .pill.bad { background: #fee2e2; color: #991b1b; }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%) translateY(90px);
+      background: #0f172a;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 999px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+      opacity: 0;
+      transition: .25s ease;
+      z-index: 10;
+      font-weight: 800;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .hidden { display: none !important; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .topbar, .actions, .quiz-actions, .toast { display: none !important; }
+      .card { box-shadow: none; border: 0; }
+      .screen { display: block !important; }
+      #homeScreen, #quizScreen { display: none !important; }
+      .score-box { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="logo" aria-hidden="true">AC</div>
+      <div class="topbar-title">
+        <h1>Quiz de révision civique</h1>
+        <p>Préparé par AC — Albert Camus</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <div id="homeScreen" class="screen active">
+        <div class="hero">
+          <div>
+            <span class="badge">30 questions • score final • corrections détaillées</span>
+            <h2>Réviser sans pression, mais sérieusement.</h2>
+            <p class="lead">
+              AC a préparé ce quiz pour aider à réviser l’examen civique. Le but est simple : répondre aux questions,
+              voir le score final, puis relire les bonnes réponses et les explications.
+            </p>
+
+            <div class="form-grid">
+              <div class="field">
+                <label for="studentSelect">Qui passe le quiz ?</label>
+                <select id="studentSelect">
+                  <option value="Léonie">Léonie</option>
+                  <option value="Jeruscha">Jeruscha</option>
+                  <option value="Autre">Autre prénom</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="customName">Prénom si besoin</label>
+                <input id="customName" type="text" placeholder="Exemple : Aline" />
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-primary" id="startBtn" type="button">Commencer le quiz</button>
+              <button class="btn btn-ghost" id="resumeBtn" type="button">Reprendre</button>
+              <button class="btn btn-danger" id="clearBtn" type="button">Effacer les anciennes réponses</button>
+            </div>
+          </div>
+
+          <aside class="info-box">
+            <h3>Ce que le quiz fait</h3>
+            <ul class="info-list">
+              <li><span class="dot"></span><span>30 questions à choix multiples sur les valeurs, institutions et symboles de la République française.</span></li>
+              <li><span class="dot"></span><span>Une seule bonne réponse par question.</span></li>
+              <li><span class="dot"></span><span>À la fin : score, réponses données, bonnes réponses et explications.</span></li>
+              <li><span class="dot"></span><span>Possibilité de copier ou envoyer le résultat à AC par WhatsApp.</span></li>
+            </ul>
+          </aside>
+        </div>
+      </div>
+
+      <div id="quizScreen" class="screen">
+        <div class="quiz-head">
+          <span id="studentLabel">Participant : Léonie</span>
+          <span id="questionCounter">Question 1/30</span>
+        </div>
+        <div class="progress" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+        <article class="question-card">
+          <p class="small-note" id="categoryLabel">Catégorie</p>
+          <h2 class="question-title" id="questionTitle">Question</h2>
+          <div class="options" id="optionsContainer"></div>
+          <div class="explanation" id="explanationBox"></div>
+        </article>
+
+        <div class="quiz-actions">
+          <button class="btn btn-ghost" id="prevBtn" type="button">← Question précédente</button>
+          <button class="btn btn-ghost" id="homeBtn" type="button">Accueil</button>
+          <button class="btn btn-primary" id="nextBtn" type="button" disabled>Question suivante →</button>
+        </div>
+      </div>
+
+      <div id="resultScreen" class="screen">
+        <div class="results-grid">
+          <aside class="score-box">
+            <p class="small-note" id="finalStudent">Résultat</p>
+            <div class="score-number" id="finalScore">0/30</div>
+            <p class="score-message" id="scoreMessage"></p>
+
+            <div class="actions" style="justify-content:center">
+              <button class="btn btn-secondary" id="whatsappBtn" type="button">Envoyer à AC sur WhatsApp</button>
+              <button class="btn btn-ghost" id="copyBtn" type="button">Copier le résultat</button>
+              <button class="btn btn-ghost" id="printBtn" type="button">Imprimer / PDF</button>
+              <button class="btn btn-primary" id="restartBtn" type="button">Recommencer</button>
+            </div>
+
+            <p class="small-note" style="margin-top:16px">
+              Le résultat reste sur ce téléphone uniquement, sauf si tu le copies ou l’envoies.
+            </p>
+          </aside>
+
+          <section>
+            <h2 style="font-size:28px;margin-bottom:12px">Correction complète</h2>
+            <div class="review-list" id="reviewList"></div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast">Copié</div>
+
+  <script>
+    const AC_WHATSAPP = "33614469188"; // Numéro de AC sans le +
+    const STORAGE_KEY = "quiz_civique_ac_v3";
+
+    const questions = [
+      {
+        category: "Symboles de la République",
+        question: "Quelle est la devise de la République française ?",
+        options: ["Liberté, égalité, fraternité", "Travail, famille, patrie", "Unité, justice, paix", "Force, honneur, nation"],
+        answer: "Liberté, égalité, fraternité",
+        explanation: "La devise officielle de la République française est : Liberté, égalité, fraternité. Elle résume les valeurs républicaines fondamentales."
+      },
+      {
+        category: "Symboles de la République",
+        question: "Quel est l’hymne national français ?",
+        options: ["La Parisienne", "La Marseillaise", "Le Chant du Départ", "La Carmagnole"],
+        answer: "La Marseillaise",
+        explanation: "La Marseillaise est l’hymne national français. Elle est souvent chantée lors des cérémonies officielles et des événements nationaux."
+      },
+      {
+        category: "Symboles de la République",
+        question: "Quelles sont les couleurs du drapeau français ?",
+        options: ["Bleu, blanc, rouge", "Rouge, jaune, vert", "Bleu, jaune, rouge", "Noir, blanc, rouge"],
+        answer: "Bleu, blanc, rouge",
+        explanation: "Le drapeau français est tricolore : bleu, blanc, rouge. Il est l’un des principaux symboles de la République."
+      },
+      {
+        category: "Fêtes et commémorations",
+        question: "Quelle est la fête nationale française ?",
+        options: ["Le 1er mai", "Le 8 mai", "Le 14 juillet", "Le 11 novembre"],
+        answer: "Le 14 juillet",
+        explanation: "Le 14 juillet est la fête nationale française. Elle renvoie notamment à la prise de la Bastille en 1789 et à la Fête de la Fédération en 1790."
+      },
+      {
+        category: "Institutions",
+        question: "Qui est le chef de l’État en France ?",
+        options: ["Le maire", "Le président de la République", "Le Premier ministre", "Le président du Sénat"],
+        answer: "Le président de la République",
+        explanation: "Le président de la République est le chef de l’État. Il représente la France et veille au fonctionnement des institutions."
+      },
+      {
+        category: "Institutions",
+        question: "Qui nomme le Premier ministre ?",
+        options: ["Le président de la République", "Le Sénat", "Les maires", "Le Conseil constitutionnel"],
+        answer: "Le président de la République",
+        explanation: "Le président de la République nomme le Premier ministre. Le Premier ministre dirige ensuite l’action du gouvernement."
+      },
+      {
+        category: "Institutions",
+        question: "Combien de chambres composent le Parlement français ?",
+        options: ["Une", "Deux", "Trois", "Quatre"],
+        answer: "Deux",
+        explanation: "Le Parlement français est composé de deux chambres : l’Assemblée nationale et le Sénat."
+      },
+      {
+        category: "Institutions",
+        question: "Quelles sont les deux chambres du Parlement français ?",
+        options: ["Le Sénat et le Conseil d’État", "L’Assemblée nationale et le Sénat", "Le Gouvernement et le Sénat", "La mairie et la préfecture"],
+        answer: "L’Assemblée nationale et le Sénat",
+        explanation: "Le Parlement comprend l’Assemblée nationale, où siègent les députés, et le Sénat, où siègent les sénateurs."
+      },
+      {
+        category: "Institutions",
+        question: "Quel est le rôle principal du Parlement ?",
+        options: ["Rendre la justice", "Voter les lois", "Diriger les communes", "Nommer les préfets"],
+        answer: "Voter les lois",
+        explanation: "Le Parlement discute et vote les lois. Il contrôle aussi l’action du gouvernement."
+      },
+      {
+        category: "Démocratie",
+        question: "À quel âge peut-on voter en France ?",
+        options: ["16 ans", "18 ans", "21 ans", "25 ans"],
+        answer: "18 ans",
+        explanation: "En France, les citoyens français peuvent voter à partir de 18 ans, à condition d’être inscrits sur les listes électorales."
+      },
+      {
+        category: "Démocratie",
+        question: "Que signifie le suffrage universel ?",
+        options: ["Tout le monde peut gouverner directement", "Tous les citoyens majeurs peuvent voter", "Seuls les élus peuvent voter", "Seuls les diplômés peuvent voter"],
+        answer: "Tous les citoyens majeurs peuvent voter",
+        explanation: "Le suffrage universel signifie que le droit de vote appartient à tous les citoyens majeurs, sans distinction de richesse, d’origine ou de statut social."
+      },
+      {
+        category: "Démocratie",
+        question: "Qu’est-ce qu’un référendum ?",
+        options: ["Une décision prise uniquement par les juges", "Une consultation directe des citoyens", "Une réunion de ministres", "Une loi votée par les maires"],
+        answer: "Une consultation directe des citoyens",
+        explanation: "Un référendum permet aux citoyens de répondre directement à une question posée par les autorités publiques."
+      },
+      {
+        category: "Valeurs républicaines",
+        question: "Que signifie la laïcité ?",
+        options: ["L’interdiction de croire", "La séparation des religions et de l’État", "L’obligation d’avoir une religion", "La priorité donnée à une religion"],
+        answer: "La séparation des religions et de l’État",
+        explanation: "La laïcité garantit la liberté de conscience et la neutralité de l’État vis-à-vis des religions."
+      },
+      {
+        category: "Valeurs républicaines",
+        question: "Que signifie l’égalité devant la loi ?",
+        options: ["Les riches ont plus de droits", "La loi s’applique à tous de la même manière", "Les élus ne respectent pas les lois", "Chaque ville choisit ses lois"],
+        answer: "La loi s’applique à tous de la même manière",
+        explanation: "L’égalité devant la loi signifie que tous les citoyens sont soumis aux mêmes règles et bénéficient des mêmes protections juridiques."
+      },
+      {
+        category: "Langue et culture",
+        question: "Quelle est la langue officielle de la République française ?",
+        options: ["Le français", "L’anglais", "Le latin", "Toutes les langues européennes"],
+        answer: "Le français",
+        explanation: "La langue officielle de la République française est le français. C’est la langue de l’administration et des institutions."
+      },
+      {
+        category: "Histoire",
+        question: "En quelle année a eu lieu la Révolution française ?",
+        options: ["1515", "1789", "1848", "1914"],
+        answer: "1789",
+        explanation: "La Révolution française commence en 1789. C’est une date majeure dans l’histoire politique de la France."
+      },
+      {
+        category: "Histoire",
+        question: "Quel texte de 1789 affirme les droits fondamentaux des citoyens ?",
+        options: ["Le Code civil", "La Déclaration des droits de l’homme et du citoyen", "La Constitution de 1958", "Le traité de Versailles"],
+        answer: "La Déclaration des droits de l’homme et du citoyen",
+        explanation: "La Déclaration des droits de l’homme et du citoyen de 1789 affirme notamment la liberté, l’égalité et la souveraineté de la nation."
+      },
+      {
+        category: "Histoire",
+        question: "Que commémore le 11 novembre ?",
+        options: ["La fête du travail", "L’armistice de 1918", "La prise de la Bastille", "La fin de la Révolution"],
+        answer: "L’armistice de 1918",
+        explanation: "Le 11 novembre commémore l’armistice de 1918, qui marque la fin des combats de la Première Guerre mondiale."
+      },
+      {
+        category: "Histoire",
+        question: "Que commémore le 8 mai en France ?",
+        options: ["La victoire de 1945", "La fête nationale", "La Révolution française", "La création de l’Union européenne"],
+        answer: "La victoire de 1945",
+        explanation: "Le 8 mai commémore la victoire de 1945 et la fin de la Seconde Guerre mondiale en Europe."
+      },
+      {
+        category: "Justice",
+        question: "Que signifie la présomption d’innocence ?",
+        options: ["Toute personne est coupable dès son arrestation", "Toute personne est innocente tant que sa culpabilité n’est pas prouvée", "Seuls les témoins décident", "La police décide seule de la culpabilité"],
+        answer: "Toute personne est innocente tant que sa culpabilité n’est pas prouvée",
+        explanation: "La présomption d’innocence protège toute personne accusée : elle doit être considérée comme innocente tant qu’un jugement ne prouve pas sa culpabilité."
+      },
+      {
+        category: "Justice",
+        question: "Quel est le rôle de la justice ?",
+        options: ["Faire respecter la loi et trancher les conflits", "Organiser les élections", "Diriger les écoles", "Écrire les journaux"],
+        answer: "Faire respecter la loi et trancher les conflits",
+        explanation: "La justice applique la loi, protège les droits et tranche les conflits entre les personnes ou avec l’administration."
+      },
+      {
+        category: "Collectivités locales",
+        question: "Qui dirige une commune ?",
+        options: ["Le maire", "Le président de la République", "Le ministre de l’Intérieur", "Le député européen"],
+        answer: "Le maire",
+        explanation: "Le maire dirige la commune avec le conseil municipal. Il gère notamment certains services locaux et l’état civil."
+      },
+      {
+        category: "Collectivités locales",
+        question: "Quel document la mairie peut-elle délivrer ou enregistrer ?",
+        options: ["Un acte d’état civil", "Un passeport diplomatique pour tous", "Une loi nationale", "Une décision de justice pénale"],
+        answer: "Un acte d’état civil",
+        explanation: "La mairie gère les actes d’état civil, comme les naissances, mariages et décès."
+      },
+      {
+        category: "Citoyenneté",
+        question: "Quel est un devoir important du citoyen ?",
+        options: ["Respecter les lois", "Ignorer les institutions", "Refuser toute règle commune", "Décider seul des lois"],
+        answer: "Respecter les lois",
+        explanation: "Un citoyen a des droits, mais aussi des devoirs : respecter la loi, les autres citoyens et les valeurs de la République."
+      },
+      {
+        category: "Citoyenneté",
+        question: "Pourquoi paie-t-on des impôts ?",
+        options: ["Pour financer les services publics", "Pour enrichir uniquement les élus", "Pour éviter de voter", "Pour remplacer les lois"],
+        answer: "Pour financer les services publics",
+        explanation: "Les impôts financent les services publics : école, santé, sécurité, justice, infrastructures, solidarité, etc."
+      },
+      {
+        category: "Services publics",
+        question: "Quel est un exemple de service public ?",
+        options: ["L’école publique", "Une conversation privée", "Une marque de vêtements", "Un compte personnel sur un réseau social"],
+        answer: "L’école publique",
+        explanation: "L’école publique est un service public. Elle permet l’accès à l’éducation pour tous."
+      },
+      {
+        category: "Protection sociale",
+        question: "À quoi sert la Sécurité sociale ?",
+        options: ["À protéger contre certains risques de la vie", "À organiser les élections", "À voter les lois", "À remplacer la justice"],
+        answer: "À protéger contre certains risques de la vie",
+        explanation: "La Sécurité sociale protège notamment face aux risques liés à la maladie, la famille, la vieillesse ou les accidents du travail."
+      },
+      {
+        category: "Union européenne",
+        question: "La France fait partie de quelle organisation politique européenne ?",
+        options: ["L’Union européenne", "L’Union africaine", "Le Mercosur", "L’ASEAN"],
+        answer: "L’Union européenne",
+        explanation: "La France est membre de l’Union européenne, une organisation qui réunit plusieurs États européens autour de règles et projets communs."
+      },
+      {
+        category: "Constitution",
+        question: "Sous quelle République la France vit-elle aujourd’hui ?",
+        options: ["La Première République", "La Troisième République", "La Cinquième République", "La Sixième République"],
+        answer: "La Cinquième République",
+        explanation: "La France vit sous la Cinquième République, instaurée par la Constitution de 1958."
+      },
+      {
+        category: "Libertés fondamentales",
+        question: "La liberté d’expression signifie que l’on peut…",
+        options: ["Exprimer ses idées dans le respect de la loi", "Diffamer librement tout le monde", "Appeler à la violence", "Refuser toutes les règles"],
+        answer: "Exprimer ses idées dans le respect de la loi",
+        explanation: "La liberté d’expression est protégée, mais elle a des limites prévues par la loi, par exemple contre la diffamation, la haine ou l’appel à la violence."
+      }
+    ];
+
+    let currentIndex = 0;
+    let selectedAnswers = [];
+    let locked = false;
+    let studentName = "Léonie";
+
+    const homeScreen = document.getElementById("homeScreen");
+    const quizScreen = document.getElementById("quizScreen");
+    const resultScreen = document.getElementById("resultScreen");
+    const studentSelect = document.getElementById("studentSelect");
+    const customName = document.getElementById("customName");
+    const startBtn = document.getElementById("startBtn");
+    const resumeBtn = document.getElementById("resumeBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const studentLabel = document.getElementById("studentLabel");
+    const questionCounter = document.getElementById("questionCounter");
+    const progressFill = document.getElementById("progressFill");
+    const categoryLabel = document.getElementById("categoryLabel");
+    const questionTitle = document.getElementById("questionTitle");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const explanationBox = document.getElementById("explanationBox");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const homeBtn = document.getElementById("homeBtn");
+    const finalStudent = document.getElementById("finalStudent");
+    const finalScore = document.getElementById("finalScore");
+    const scoreMessage = document.getElementById("scoreMessage");
+    const reviewList = document.getElementById("reviewList");
+    const whatsappBtn = document.getElementById("whatsappBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const printBtn = document.getElementById("printBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const toast = document.getElementById("toast");
+
+    function getChosenName() {
+      const custom = customName.value.trim();
+      if (custom) return custom;
+      return studentSelect.value || "Participant";
+    }
+
+    function showScreen(screen) {
+      [homeScreen, quizScreen, resultScreen].forEach(s => s.classList.remove("active"));
+      screen.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function startQuiz(fresh = true) {
+      studentName = getChosenName();
+      if (fresh) {
+        currentIndex = 0;
+        selectedAnswers = Array(questions.length).fill(null);
+      }
+      saveState();
+      renderQuestion();
+      showScreen(quizScreen);
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      locked = selectedAnswers[currentIndex] !== null;
+
+      studentLabel.textContent = `Participant : ${studentName}`;
+      questionCounter.textContent = `Question ${currentIndex + 1}/${questions.length}`;
+      progressFill.style.width = `${((currentIndex) / questions.length) * 100}%`;
+      categoryLabel.textContent = q.category;
+      questionTitle.textContent = q.question;
+      optionsContainer.innerHTML = "";
+      explanationBox.classList.remove("show");
+      explanationBox.textContent = "";
+
+      q.options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option";
+        btn.textContent = option;
+        btn.addEventListener("click", () => selectAnswer(option));
+        optionsContainer.appendChild(btn);
+      });
+
+      if (selectedAnswers[currentIndex] !== null) {
+        revealAnswer(selectedAnswers[currentIndex], false);
+      }
+
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = selectedAnswers[currentIndex] === null;
+      nextBtn.textContent = currentIndex === questions.length - 1 ? "Voir le résultat →" : "Question suivante →";
+      saveState();
+    }
+
+    function selectAnswer(option) {
+      if (selectedAnswers[currentIndex] !== null) return;
+      selectedAnswers[currentIndex] = option;
+      revealAnswer(option, true);
+      saveState();
+    }
+
+    function revealAnswer(option, animate) {
+      const q = questions[currentIndex];
+      const buttons = optionsContainer.querySelectorAll(".option");
+
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        if (btn.textContent === q.answer) btn.classList.add("correct");
+        if (btn.textContent === option && option !== q.answer) btn.classList.add("wrong");
+        if (btn.textContent === option) btn.classList.add("selected");
+      });
+
+      const isCorrect = option === q.answer;
+      explanationBox.innerHTML = `<strong>${isCorrect ? "Bonne réponse." : "Réponse incorrecte."}</strong><br>${q.explanation}`;
+      explanationBox.classList.add("show");
+      nextBtn.disabled = false;
+
+      if (animate) {
+        setTimeout(() => {
+          if (currentIndex < questions.length - 1) {
+            currentIndex++;
+            renderQuestion();
+          } else {
+            showResults();
+          }
+        }, 850);
+      }
+    }
+
+    function goNext() {
+      if (selectedAnswers[currentIndex] === null) return;
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function goPrev() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    function computeScore() {
+      return questions.reduce((score, q, i) => score + (selectedAnswers[i] === q.answer ? 1 : 0), 0);
+    }
+
+    function getScoreMessage(score) {
+      if (score <= 10) return "Il faut reprendre les bases : symboles, institutions, dates importantes et valeurs républicaines. Ce n’est pas grave, le but est justement de repérer les points à retravailler.";
+      if (score <= 18) return "Résultat correct, mais certaines notions doivent encore être consolidées. Relis bien les corrections, surtout les questions ratées.";
+      if (score <= 24) return "Bon niveau. Les bases sont là. Avec une dernière révision sur les erreurs, tu peux arriver plus sereinement à l’examen.";
+      if (score <= 29) return "Très bon résultat. Tu maîtrises déjà l’essentiel. Il reste seulement quelques détails à verrouiller.";
+      return "Excellent. 30/30 : rien à dire, la révision est très solide.";
+    }
+
+    function showResults() {
+      const score = computeScore();
+      progressFill.style.width = "100%";
+      finalStudent.textContent = `Résultat de ${studentName}`;
+      finalScore.textContent = `${score}/${questions.length}`;
+      scoreMessage.textContent = getScoreMessage(score);
+      reviewList.innerHTML = "";
+
+      questions.forEach((q, i) => {
+        const userAnswer = selectedAnswers[i] || "Aucune réponse";
+        const good = userAnswer === q.answer;
+        const item = document.createElement("article");
+        item.className = `review-item ${good ? "good" : "bad"}`;
+        item.innerHTML = `
+          <h4>${i + 1}. ${q.question} <span class="pill ${good ? "good" : "bad"}">${good ? "Correct" : "À revoir"}</span></h4>
+          <p class="answer-line"><strong>Réponse donnée :</strong> ${escapeHtml(userAnswer)}</p>
+          <p class="answer-line"><strong>Bonne réponse :</strong> ${escapeHtml(q.answer)}</p>
+          <p class="answer-line"><strong>Explication :</strong> ${escapeHtml(q.explanation)}</p>
+        `;
+        reviewList.appendChild(item);
+      });
+
+      saveState();
+      showScreen(resultScreen);
+    }
+
+    function generateSummaryText() {
+      const score = computeScore();
+      let text = `Quiz de révision civique préparé par AC\n`;
+      text += `Participant : ${studentName}\n`;
+      text += `Score : ${score}/${questions.length}\n\n`;
+      questions.forEach((q, i) => {
+        const userAnswer = selectedAnswers[i] || "Aucune réponse";
+        const good = userAnswer === q.answer ? "OK" : "À revoir";
+        text += `${i + 1}. ${q.question}\n`;
+        text += `Réponse donnée : ${userAnswer} (${good})\n`;
+        text += `Bonne réponse : ${q.answer}\n`;
+        text += `Explication : ${q.explanation}\n\n`;
+      });
+      return text;
+    }
+
+    function sendWhatsApp() {
+      const text = generateSummaryText();
+      const url = `https://wa.me/${AC_WHATSAPP}?text=${encodeURIComponent(text)}`;
+      window.open(url, "_blank");
+    }
+
+    async function copyResult() {
+      const text = generateSummaryText();
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Résultat copié");
+      } catch (e) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+        showToast("Résultat copié");
+      }
+    }
+
+    function saveState() {
+      try {
+        const data = { currentIndex, selectedAnswers, studentName, selectedName: studentSelect.value, customName: customName.value };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {}
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+        const data = JSON.parse(raw);
+        currentIndex = typeof data.currentIndex === "number" ? data.currentIndex : 0;
+        selectedAnswers = Array.isArray(data.selectedAnswers) ? data.selectedAnswers : Array(questions.length).fill(null);
+        selectedAnswers = selectedAnswers.slice(0, questions.length);
+        while (selectedAnswers.length < questions.length) selectedAnswers.push(null);
+        studentName = data.studentName || "Léonie";
+        studentSelect.value = data.selectedName || studentName || "Léonie";
+        customName.value = data.customName || "";
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    function clearState() {
+      localStorage.removeItem(STORAGE_KEY);
+      currentIndex = 0;
+      selectedAnswers = Array(questions.length).fill(null);
+      studentName = getChosenName();
+      showToast("Anciennes réponses effacées");
+      showScreen(homeScreen);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    startBtn.addEventListener("click", () => startQuiz(true));
+    resumeBtn.addEventListener("click", () => {
+      if (loadState()) {
+        renderQuestion();
+        showScreen(quizScreen);
+      } else {
+        showToast("Aucune ancienne réponse");
+      }
+    });
+    clearBtn.addEventListener("click", clearState);
+    prevBtn.addEventListener("click", goPrev);
+    nextBtn.addEventListener("click", goNext);
+    homeBtn.addEventListener("click", () => showScreen(homeScreen));
+    whatsappBtn.addEventListener("click", sendWhatsApp);
+    copyBtn.addEventListener("click", copyResult);
+    printBtn.addEventListener("click", () => window.print());
+    restartBtn.addEventListener("click", () => startQuiz(true));
+
+    studentSelect.addEventListener("change", () => {
+      if (studentSelect.value !== "Autre") customName.value = "";
+    });
+
+    selectedAnswers = Array(questions.length).fill(null);
+    loadState();
+  </script>
+</body>
+</html>
