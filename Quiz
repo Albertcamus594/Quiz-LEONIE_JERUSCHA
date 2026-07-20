@@ -1,0 +1,3835 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz civique AC — Léonie & Jeruscha</title>
+  <style>
+    :root{
+      --bg1:#07111f;--bg2:#101b33;--card:rgba(255,255,255,.08);--card2:rgba(255,255,255,.12);
+      --text:#f7f7fb;--muted:#c7d2e5;--line:rgba(255,255,255,.16);--gold:#f0c866;--blue:#7bb7ff;
+      --green:#44d07b;--red:#ff6b6b;--shadow:0 22px 60px rgba(0,0,0,.35);--radius:24px;
+    }
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--text)}
+    body{background:radial-gradient(circle at top left,#243f73 0,#101b33 34%,#070b14 100%);padding:18px;}
+    .app{max-width:1050px;margin:0 auto;}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch;margin:10px 0 18px;}
+    @media(max-width:840px){.hero{grid-template-columns:1fr}.side-card{display:none}}
+    .card{background:linear-gradient(180deg,var(--card),rgba(255,255,255,.045));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(14px);}
+    .intro{padding:28px;position:relative;overflow:hidden}.intro:after{content:"";position:absolute;right:-80px;top:-80px;width:220px;height:220px;border-radius:50%;background:rgba(240,200,102,.13)}
+    .badge{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(240,200,102,.12);border:1px solid rgba(240,200,102,.28);color:#ffe2a0;font-weight:700;font-size:13px;}
+    h1{font-size:clamp(28px,4vw,48px);line-height:1.05;margin:16px 0 10px;letter-spacing:-.04em}.lead{font-size:17px;color:var(--muted);line-height:1.65;margin:0 0 20px}
+    .creator{font-weight:800;color:#fff}.actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.btn{border:0;border-radius:16px;padding:14px 18px;font-weight:800;cursor:pointer;color:#08111f;background:#fff;box-shadow:0 10px 25px rgba(0,0,0,.18);transition:transform .15s ease,opacity .15s ease}.btn:hover{transform:translateY(-2px)}.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}.btn.primary{background:linear-gradient(135deg,var(--gold),#ffefb2);}.btn.secondary{background:rgba(255,255,255,.10);color:#fff;border:1px solid var(--line)}.btn.blue{background:linear-gradient(135deg,#8cc7ff,#d7ecff);}.btn.danger{background:rgba(255,107,107,.16);color:#ffd0d0;border:1px solid rgba(255,107,107,.34)}
+    .side-card{padding:18px;overflow:hidden;position:relative}.visual{height:100%;min-height:240px;border-radius:20px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.visual svg{width:100%;height:100%}.name-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.choice{padding:14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:#fff;font-weight:800;text-align:center;cursor:pointer}.choice.active{border-color:var(--gold);background:rgba(240,200,102,.15);box-shadow:inset 0 0 0 1px rgba(240,200,102,.3)}
+    .quiz{display:none}.topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap}.pill{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--muted);font-size:13px;font-weight:700}.progress{height:12px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-bottom:14px}.fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--blue));transition:width .25s ease}.question-card{padding:22px}.q-image{height:150px;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:rgba(255,255,255,.04);margin-bottom:18px}.q-image svg{width:100%;height:100%;display:block}.q-title{font-size:13px;font-weight:900;color:#ffe2a0;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}.question{font-size:clamp(22px,3vw,32px);line-height:1.18;font-weight:900;letter-spacing:-.03em;margin-bottom:18px}.options{display:grid;gap:12px}.option{width:100%;text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.07);color:#fff;border-radius:18px;padding:16px;font-size:16px;font-weight:750;cursor:pointer;transition:.15s}.option:hover{background:rgba(255,255,255,.12);transform:translateY(-1px)}.option.selected{border-color:var(--gold);background:rgba(240,200,102,.16)}
+    .result{display:none;padding:22px}.score-box{text-align:center;padding:24px;border-radius:22px;background:rgba(255,255,255,.07);border:1px solid var(--line);margin-bottom:18px}.score{font-size:56px;font-weight:950;letter-spacing:-.05em;color:#ffe2a0}.message{font-size:18px;color:var(--muted);line-height:1.55}.review{display:grid;gap:12px;margin-top:18px}.review-item{border:1px solid var(--line);border-radius:18px;padding:16px;background:rgba(255,255,255,.06)}.review-item.correct{border-color:rgba(68,208,123,.45)}.review-item.wrong{border-color:rgba(255,107,107,.45)}.review-head{display:flex;justify-content:space-between;gap:12px;font-weight:900;margin-bottom:8px}.ok{color:var(--green)}.ko{color:var(--red)}.small{color:var(--muted);font-size:14px;line-height:1.5}.explain{margin-top:8px;color:#e7eefc}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.stat{padding:12px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid var(--line);text-align:center}.stat b{display:block;font-size:22px;color:#fff}.stat span{font-size:12px;color:var(--muted);font-weight:700}.footer{margin:22px 0;text-align:center;color:var(--muted);font-size:13px}.hidden{display:none!important}@media(max-width:650px){body{padding:10px}.intro,.question-card,.result{padding:18px}.name-row{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.actions .btn{width:100%}.q-image{height:120px}}
+    .option:disabled{cursor:default}
+    .option.dimmed{opacity:.5}
+    .option.correct{border-color:var(--green);background:rgba(68,208,123,.22)}
+    .option.incorrect{border-color:var(--red);background:rgba(255,107,107,.22)}
+
+    .popup-overlay{position:fixed;inset:0;background:rgba(4,8,16,.72);display:flex;align-items:center;justify-content:center;padding:18px;z-index:100;opacity:0;pointer-events:none;transition:opacity .2s ease}
+    .popup-overlay.open{opacity:1;pointer-events:auto}
+    .popup-card{width:100%;max-width:460px;background:linear-gradient(180deg,#16233f,#0b1220);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:28px;text-align:center;transform:translateY(18px) scale(.96);transition:transform .25s ease}
+    .popup-overlay.open .popup-card{transform:translateY(0) scale(1)}
+    .popup-shape{width:104px;height:104px;margin:0 auto 14px;position:relative}
+    .popup-shape svg{width:100%;height:100%;position:relative;z-index:1;animation:popIn .5s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes popIn{0%{transform:scale(.2) rotate(-25deg);opacity:0}60%{transform:scale(1.12) rotate(4deg);opacity:1}100%{transform:scale(1) rotate(0)}}
+    .popup-title{font-size:22px;font-weight:900;margin-bottom:8px}
+    .popup-title.ok{color:var(--green)}
+    .popup-title.ko{color:var(--red)}
+    .popup-answer{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.55}
+    .popup-answer b{color:#fff}
+    .popup-tip{background:rgba(240,200,102,.12);border:1px solid rgba(240,200,102,.28);border-radius:16px;padding:14px 16px;font-size:14px;color:#ffe9bd;line-height:1.5;margin-bottom:20px;text-align:left}
+    .confetti{position:absolute;inset:0;overflow:visible;pointer-events:none}
+    .confetti span{position:absolute;top:44%;left:50%;width:8px;height:8px;border-radius:2px;opacity:0;animation:confettiPop .9s ease-out forwards}
+    @keyframes confettiPop{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot))}}
+    @media(max-width:650px){.popup-card{padding:20px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero card" id="home">
+      <div class="intro">
+        <span class="badge">📘 Quiz civique — banque de 250 questions</span>
+        <h1>Révision civique préparée par <span class="creator">AC</span></h1>
+        <p class="lead">Albert Camus a préparé ce quiz pour aider <b>Léonie</b> et <b>Jeruscha</b> à réviser sérieusement. À chaque tentative, le site tire 30 questions différentes, mélange les réponses, affiche la correction complète et permet de recommencer avec une nouvelle série.</p>
+        <div class="name-row">
+          <button class="choice active" data-name="Léonie">Léonie</button>
+          <button class="choice" data-name="Jeruscha">Jeruscha</button>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="startBtn">Commencer une série de 30 questions</button>
+          <button class="btn secondary" id="clearBtn">Effacer l’historique</button>
+        </div>
+        <p class="small" style="margin-top:14px">Objectif : s’entraîner, comprendre ses erreurs, puis relancer un nouveau quiz jusqu’à être à l’aise.</p>
+      </div>
+      <aside class="side-card"><div class="visual" id="homeVisual"></div></aside>
+    </section>
+
+    <section class="quiz" id="quiz">
+      <div class="topbar">
+        <span class="pill" id="studentPill">Candidate : Léonie</span>
+        <span class="pill" id="questionPill">Question 1/30</span>
+        <span class="pill" id="bankPill">Banque : 250 questions</span>
+      </div>
+      <div class="progress"><div class="fill" id="progressFill"></div></div>
+      <article class="card question-card">
+        <div class="q-image" id="questionVisual"></div>
+        <div class="q-title" id="categoryLabel">Catégorie</div>
+        <div class="question" id="questionText">Question</div>
+        <div class="options" id="options"></div>
+      </article>
+    </section>
+
+    <section class="card result" id="result">
+      <div class="score-box">
+        <div class="pill" style="display:inline-block;margin-bottom:12px">Correction finale</div>
+        <div class="score" id="scoreText">0/30</div>
+        <div class="message" id="resultMessage"></div>
+      </div>
+      <div class="stats">
+        <div class="stat"><b id="goodStat">0</b><span>bonnes réponses</span></div>
+        <div class="stat"><b id="badStat">0</b><span>à retravailler</span></div>
+        <div class="stat"><b id="attemptStat">1</b><span>tentatives</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="newQuizBtn">Nouveau quiz avec d’autres questions</button>
+        <button class="btn blue" id="copyBtn">Copier le résultat</button>
+        <button class="btn secondary" id="downloadBtn">Télécharger la correction</button>
+        <button class="btn secondary" id="whatsappBtn">Envoyer à AC sur WhatsApp</button>
+      </div>
+      <div class="review" id="review"></div>
+    </section>
+    <div class="footer">Quiz préparé par AC — les réponses restent dans le navigateur, aucun serveur n’est utilisé.</div>
+  </main>
+
+  <div class="popup-overlay" id="popupOverlay" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="popup-card">
+      <div class="popup-shape" id="popupShape"></div>
+      <div class="popup-title" id="popupTitle">Bonne réponse !</div>
+      <div class="popup-answer" id="popupAnswer"></div>
+      <div class="popup-tip" id="popupTip"></div>
+      <button class="btn primary" id="popupContinueBtn" type="button">Question suivante</button>
+    </div>
+  </div>
+
+<script>
+const AC_WHATSAPP = "33614469188";
+const QUIZ_SIZE = 30;
+const QUESTION_BANK = [
+  {
+    "id": "Q001A",
+    "category": "Symboles et valeurs",
+    "title": "Devise",
+    "question": "Quelle est la devise de la République française ?",
+    "options": [
+      "Liberté, égalité, fraternité",
+      "Travail, famille, patrie",
+      "Unité, discipline, progrès",
+      "Foi, loi, roi"
+    ],
+    "answer": "Liberté, égalité, fraternité",
+    "explanation": "La devise officielle de la République française est « Liberté, égalité, fraternité ». Elle exprime trois valeurs centrales de la vie républicaine."
+  },
+  {
+    "id": "Q002A",
+    "category": "Symboles et valeurs",
+    "title": "Drapeau",
+    "question": "Quelles sont les couleurs du drapeau français ?",
+    "options": [
+      "Bleu, blanc, rouge",
+      "Vert, blanc, rouge",
+      "Bleu, jaune, rouge",
+      "Noir, blanc, rouge"
+    ],
+    "answer": "Bleu, blanc, rouge",
+    "explanation": "Le drapeau tricolore français est bleu, blanc et rouge. C’est l’un des symboles de la République."
+  },
+  {
+    "id": "Q003A",
+    "category": "Symboles et valeurs",
+    "title": "Hymne national",
+    "question": "Quel est l’hymne national de la France ?",
+    "options": [
+      "La Marseillaise",
+      "Le Chant des partisans",
+      "La Parisienne",
+      "L’Ode à la joie"
+    ],
+    "answer": "La Marseillaise",
+    "explanation": "La Marseillaise est l’hymne national français. Elle est chantée lors des cérémonies officielles et événements nationaux."
+  },
+  {
+    "id": "Q004A",
+    "category": "Symboles et valeurs",
+    "title": "Marianne",
+    "question": "Que représente Marianne ?",
+    "options": [
+      "La République française",
+      "La monarchie française",
+      "L’Union européenne",
+      "L’armée française"
+    ],
+    "answer": "La République française",
+    "explanation": "Marianne est une figure symbolique de la République française. On la retrouve notamment dans les mairies et sur certains timbres."
+  },
+  {
+    "id": "Q005A",
+    "category": "Symboles et valeurs",
+    "title": "14 juillet",
+    "question": "Que célèbre la fête nationale du 14 juillet ?",
+    "options": [
+      "La République et l’unité nationale",
+      "La fin de l’école",
+      "La fête du travail",
+      "La création de l’euro"
+    ],
+    "answer": "La République et l’unité nationale",
+    "explanation": "Le 14 juillet est la fête nationale française. Il rappelle la Révolution française et la Fête de la Fédération."
+  },
+  {
+    "id": "Q006A",
+    "category": "Symboles et valeurs",
+    "title": "Liberté",
+    "question": "Dans la devise française, que signifie la liberté ?",
+    "options": [
+      "Pouvoir agir dans le respect de la loi et des autres",
+      "Faire tout ce que l’on veut sans limite",
+      "Refuser toutes les règles",
+      "Obéir uniquement à sa famille"
+    ],
+    "answer": "Pouvoir agir dans le respect de la loi et des autres",
+    "explanation": "La liberté n’est pas l’absence totale de règles : elle s’exerce dans le cadre de la loi et du respect d’autrui."
+  },
+  {
+    "id": "Q007A",
+    "category": "Symboles et valeurs",
+    "title": "Égalité",
+    "question": "Dans la République française, que signifie l’égalité ?",
+    "options": [
+      "Les citoyens sont égaux devant la loi",
+      "Tout le monde a exactement le même salaire",
+      "Les élus sont au-dessus des lois",
+      "La loi dépend de la religion"
+    ],
+    "answer": "Les citoyens sont égaux devant la loi",
+    "explanation": "L’égalité républicaine signifie notamment que la loi s’applique à tous de manière égale."
+  },
+  {
+    "id": "Q008A",
+    "category": "Symboles et valeurs",
+    "title": "Fraternité",
+    "question": "Que signifie la fraternité dans la devise française ?",
+    "options": [
+      "La solidarité entre les citoyens",
+      "L’obligation d’être de la même famille",
+      "La priorité donnée aux plus riches",
+      "Le refus de l’entraide"
+    ],
+    "answer": "La solidarité entre les citoyens",
+    "explanation": "La fraternité renvoie à l’entraide, à la solidarité et au respect entre les personnes."
+  },
+  {
+    "id": "Q009A",
+    "category": "Symboles et valeurs",
+    "title": "Coq",
+    "question": "Quel animal est souvent associé symboliquement à la France ?",
+    "options": [
+      "Le coq",
+      "L’aigle",
+      "Le lion",
+      "Le taureau"
+    ],
+    "answer": "Le coq",
+    "explanation": "Le coq est un symbole populaire associé à la France, notamment dans le sport et certaines représentations nationales."
+  },
+  {
+    "id": "Q010A",
+    "category": "Symboles et valeurs",
+    "title": "République",
+    "question": "Que signifie vivre en République ?",
+    "options": [
+      "Le pouvoir appartient au peuple par ses représentants et ses institutions",
+      "Le pouvoir appartient à un roi",
+      "Le pouvoir appartient à une seule famille",
+      "Le pouvoir dépend d’une religion officielle"
+    ],
+    "answer": "Le pouvoir appartient au peuple par ses représentants et ses institutions",
+    "explanation": "Une République repose sur des institutions publiques, des lois communes et la souveraineté du peuple."
+  },
+  {
+    "id": "Q011A",
+    "category": "Symboles et valeurs",
+    "title": "Valeurs",
+    "question": "Quelle valeur est fondamentale dans la République française ?",
+    "options": [
+      "La dignité de la personne humaine",
+      "La supériorité d’un groupe",
+      "L’arbitraire",
+      "L’inégalité devant la loi"
+    ],
+    "answer": "La dignité de la personne humaine",
+    "explanation": "La République reconnaît la dignité de chaque personne et combat les discriminations."
+  },
+  {
+    "id": "Q012A",
+    "category": "Symboles et valeurs",
+    "title": "Citoyenneté",
+    "question": "Être citoyen, c’est notamment…",
+    "options": [
+      "Avoir des droits et des devoirs",
+      "Avoir seulement des droits",
+      "Ne jamais respecter la loi",
+      "Refuser toute participation à la société"
+    ],
+    "answer": "Avoir des droits et des devoirs",
+    "explanation": "La citoyenneté associe droits, libertés, devoirs et participation à la vie collective."
+  },
+  {
+    "id": "Q013A",
+    "category": "Symboles et valeurs",
+    "title": "Nation",
+    "question": "La nation française repose notamment sur…",
+    "options": [
+      "Une communauté de citoyens partageant des valeurs communes",
+      "Une seule origine familiale",
+      "Une seule religion",
+      "Une seule profession"
+    ],
+    "answer": "Une communauté de citoyens partageant des valeurs communes",
+    "explanation": "La nation française se construit autour de citoyens, d’institutions, de valeurs et d’une histoire commune."
+  },
+  {
+    "id": "Q014A",
+    "category": "Symboles et valeurs",
+    "title": "Bleu blanc rouge",
+    "question": "Où peut-on voir officiellement le drapeau français ?",
+    "options": [
+      "Sur les bâtiments publics",
+      "Uniquement dans les stades",
+      "Uniquement dans les commerces",
+      "Uniquement chez les particuliers"
+    ],
+    "answer": "Sur les bâtiments publics",
+    "explanation": "Le drapeau français est présent sur de nombreux bâtiments publics et lors des cérémonies officielles."
+  },
+  {
+    "id": "Q015A",
+    "category": "Symboles et valeurs",
+    "title": "Cérémonies",
+    "question": "Lors d’une cérémonie officielle, quel symbole peut être chanté ?",
+    "options": [
+      "La Marseillaise",
+      "Une chanson publicitaire",
+      "Un chant privé obligatoire",
+      "Un hymne régional uniquement"
+    ],
+    "answer": "La Marseillaise",
+    "explanation": "La Marseillaise est l’hymne national et peut être chantée lors de cérémonies officielles."
+  },
+  {
+    "id": "Q016A",
+    "category": "Institutions",
+    "title": "Chef de l’État",
+    "question": "Qui est le chef de l’État en France ?",
+    "options": [
+      "Le président de la République",
+      "Le maire",
+      "Le président du Sénat",
+      "Le préfet"
+    ],
+    "answer": "Le président de la République",
+    "explanation": "Le président de la République est le chef de l’État. Il représente la France et veille au fonctionnement des institutions."
+  },
+  {
+    "id": "Q017A",
+    "category": "Institutions",
+    "title": "Premier ministre",
+    "question": "Qui dirige l’action du gouvernement ?",
+    "options": [
+      "Le Premier ministre",
+      "Le maire",
+      "Le président du Conseil constitutionnel",
+      "Le président du Sénat"
+    ],
+    "answer": "Le Premier ministre",
+    "explanation": "Le Premier ministre dirige l’action du gouvernement et coordonne le travail des ministres."
+  },
+  {
+    "id": "Q018A",
+    "category": "Institutions",
+    "title": "Nomination PM",
+    "question": "Qui nomme le Premier ministre ?",
+    "options": [
+      "Le président de la République",
+      "Le maire de Paris",
+      "Le Sénat",
+      "Le Conseil d’État"
+    ],
+    "answer": "Le président de la République",
+    "explanation": "Le président de la République nomme le Premier ministre."
+  },
+  {
+    "id": "Q019A",
+    "category": "Institutions",
+    "title": "Parlement",
+    "question": "De quelles chambres le Parlement français est-il composé ?",
+    "options": [
+      "L’Assemblée nationale et le Sénat",
+      "La mairie et la préfecture",
+      "Le tribunal et la police",
+      "La région et la commune"
+    ],
+    "answer": "L’Assemblée nationale et le Sénat",
+    "explanation": "Le Parlement français est composé de deux chambres : l’Assemblée nationale et le Sénat."
+  },
+  {
+    "id": "Q020A",
+    "category": "Institutions",
+    "title": "Assemblée nationale",
+    "question": "Qui siège à l’Assemblée nationale ?",
+    "options": [
+      "Les députés",
+      "Les maires",
+      "Les préfets",
+      "Les juges"
+    ],
+    "answer": "Les députés",
+    "explanation": "Les députés sont élus pour représenter les citoyens à l’Assemblée nationale."
+  },
+  {
+    "id": "Q021A",
+    "category": "Institutions",
+    "title": "Sénat",
+    "question": "Qui siège au Sénat ?",
+    "options": [
+      "Les sénateurs",
+      "Les ministres",
+      "Les policiers",
+      "Les conseillers municipaux uniquement"
+    ],
+    "answer": "Les sénateurs",
+    "explanation": "Le Sénat est composé de sénateurs. Il participe au vote des lois et représente les collectivités territoriales."
+  },
+  {
+    "id": "Q022A",
+    "category": "Institutions",
+    "title": "Vote des lois",
+    "question": "Quel est le rôle principal du Parlement ?",
+    "options": [
+      "Voter la loi et contrôler le gouvernement",
+      "Rendre les jugements",
+      "Commander l’armée directement",
+      "Nommer les maires"
+    ],
+    "answer": "Voter la loi et contrôler le gouvernement",
+    "explanation": "Le Parlement vote les lois et contrôle l’action du gouvernement."
+  },
+  {
+    "id": "Q023A",
+    "category": "Institutions",
+    "title": "Gouvernement",
+    "question": "De qui le gouvernement est-il principalement composé ?",
+    "options": [
+      "Du Premier ministre et des ministres",
+      "Des juges et des avocats",
+      "Des maires uniquement",
+      "Des électeurs tirés au sort uniquement"
+    ],
+    "answer": "Du Premier ministre et des ministres",
+    "explanation": "Le gouvernement comprend le Premier ministre, les ministres et parfois des secrétaires d’État."
+  },
+  {
+    "id": "Q024A",
+    "category": "Institutions",
+    "title": "Ministre",
+    "question": "Quel est le rôle d’un ministre ?",
+    "options": [
+      "Diriger un domaine de l’action publique",
+      "Juger les citoyens",
+      "Élire le président",
+      "Créer seul la Constitution"
+    ],
+    "answer": "Diriger un domaine de l’action publique",
+    "explanation": "Un ministre est responsable d’un domaine comme l’éducation, la santé, l’intérieur ou l’économie."
+  },
+  {
+    "id": "Q025A",
+    "category": "Institutions",
+    "title": "Conseil des ministres",
+    "question": "Qui préside généralement le Conseil des ministres ?",
+    "options": [
+      "Le président de la République",
+      "Le maire",
+      "Le préfet",
+      "Le président d’une association"
+    ],
+    "answer": "Le président de la République",
+    "explanation": "Le Conseil des ministres réunit le président de la République, le Premier ministre et les ministres."
+  },
+  {
+    "id": "Q026A",
+    "category": "Institutions",
+    "title": "Constitution",
+    "question": "Quel texte organise les institutions de la République ?",
+    "options": [
+      "La Constitution",
+      "Le règlement d’une mairie",
+      "Un contrat de travail",
+      "Un programme électoral"
+    ],
+    "answer": "La Constitution",
+    "explanation": "La Constitution fixe l’organisation des pouvoirs publics et les grands principes de la République."
+  },
+  {
+    "id": "Q027A",
+    "category": "Institutions",
+    "title": "Ve République",
+    "question": "Sous quelle République vit la France aujourd’hui ?",
+    "options": [
+      "La Ve République",
+      "La IIIe République",
+      "La IVe République",
+      "La Ire République"
+    ],
+    "answer": "La Ve République",
+    "explanation": "La France vit sous la Ve République, instaurée en 1958."
+  },
+  {
+    "id": "Q028A",
+    "category": "Institutions",
+    "title": "1958",
+    "question": "En quelle année la Ve République a-t-elle été instaurée ?",
+    "options": [
+      "1958",
+      "1789",
+      "1848",
+      "1968"
+    ],
+    "answer": "1958",
+    "explanation": "La Ve République a été instaurée en 1958, avec une nouvelle Constitution."
+  },
+  {
+    "id": "Q029A",
+    "category": "Institutions",
+    "title": "Pouvoir exécutif",
+    "question": "Qui exerce principalement le pouvoir exécutif en France ?",
+    "options": [
+      "Le président de la République et le gouvernement",
+      "Les tribunaux uniquement",
+      "Les associations uniquement",
+      "Les entreprises privées"
+    ],
+    "answer": "Le président de la République et le gouvernement",
+    "explanation": "Le pouvoir exécutif met en œuvre les lois et conduit la politique de la nation."
+  },
+  {
+    "id": "Q030A",
+    "category": "Institutions",
+    "title": "Pouvoir législatif",
+    "question": "Qui exerce principalement le pouvoir législatif ?",
+    "options": [
+      "Le Parlement",
+      "La police",
+      "Les préfectures",
+      "Les banques"
+    ],
+    "answer": "Le Parlement",
+    "explanation": "Le pouvoir législatif consiste à discuter et voter les lois. Il est exercé par le Parlement."
+  },
+  {
+    "id": "Q031A",
+    "category": "Institutions",
+    "title": "Pouvoir judiciaire",
+    "question": "Quel pouvoir est chargé de rendre la justice ?",
+    "options": [
+      "Le pouvoir judiciaire",
+      "Le pouvoir commercial",
+      "Le pouvoir médiatique",
+      "Le pouvoir sportif"
+    ],
+    "answer": "Le pouvoir judiciaire",
+    "explanation": "La justice tranche les litiges et sanctionne les infractions dans le respect de la loi."
+  },
+  {
+    "id": "Q032A",
+    "category": "Institutions",
+    "title": "Séparation pouvoirs",
+    "question": "Pourquoi la séparation des pouvoirs est-elle importante ?",
+    "options": [
+      "Pour éviter la concentration du pouvoir",
+      "Pour supprimer les élections",
+      "Pour donner tout le pouvoir au gouvernement",
+      "Pour remplacer la Constitution"
+    ],
+    "answer": "Pour éviter la concentration du pouvoir",
+    "explanation": "La séparation des pouvoirs protège la démocratie en limitant les abus."
+  },
+  {
+    "id": "Q033A",
+    "category": "Institutions",
+    "title": "Conseil constitutionnel",
+    "question": "Quel organe contrôle notamment la conformité des lois à la Constitution ?",
+    "options": [
+      "Le Conseil constitutionnel",
+      "La mairie",
+      "La Sécurité sociale",
+      "La Banque de France uniquement"
+    ],
+    "answer": "Le Conseil constitutionnel",
+    "explanation": "Le Conseil constitutionnel vérifie que certaines lois respectent la Constitution."
+  },
+  {
+    "id": "Q034A",
+    "category": "Institutions",
+    "title": "Conseil d’État",
+    "question": "Quel est l’un des rôles du Conseil d’État ?",
+    "options": [
+      "Conseiller le gouvernement et juger certains litiges administratifs",
+      "Organiser les matchs nationaux",
+      "Diriger les écoles privées",
+      "Élire les députés"
+    ],
+    "answer": "Conseiller le gouvernement et juger certains litiges administratifs",
+    "explanation": "Le Conseil d’État conseille le gouvernement et est aussi la plus haute juridiction administrative."
+  },
+  {
+    "id": "Q035A",
+    "category": "Institutions",
+    "title": "Journal officiel",
+    "question": "Où les lois et décrets sont-ils publiés officiellement ?",
+    "options": [
+      "Au Journal officiel",
+      "Dans les réseaux sociaux",
+      "Dans une publicité",
+      "Dans un journal local uniquement"
+    ],
+    "answer": "Au Journal officiel",
+    "explanation": "La publication au Journal officiel permet de rendre les textes officiels accessibles et applicables."
+  },
+  {
+    "id": "Q036A",
+    "category": "Élections",
+    "title": "Droit de vote",
+    "question": "À partir de quel âge un citoyen français peut-il voter ?",
+    "options": [
+      "18 ans",
+      "16 ans",
+      "21 ans",
+      "25 ans"
+    ],
+    "answer": "18 ans",
+    "explanation": "Le droit de vote est accordé aux citoyens français majeurs, donc à partir de 18 ans."
+  },
+  {
+    "id": "Q037A",
+    "category": "Élections",
+    "title": "Suffrage universel",
+    "question": "Que signifie le suffrage universel ?",
+    "options": [
+      "Tous les citoyens remplissant les conditions peuvent voter",
+      "Seuls les riches votent",
+      "Seuls les élus votent",
+      "Seuls les fonctionnaires votent"
+    ],
+    "answer": "Tous les citoyens remplissant les conditions peuvent voter",
+    "explanation": "Le suffrage universel signifie que le droit de vote n’est pas réservé à une catégorie sociale."
+  },
+  {
+    "id": "Q038A",
+    "category": "Élections",
+    "title": "Vote secret",
+    "question": "Pourquoi le vote est-il secret ?",
+    "options": [
+      "Pour permettre à chacun de voter librement",
+      "Pour cacher les résultats",
+      "Pour empêcher les citoyens de voter",
+      "Pour supprimer le dépouillement"
+    ],
+    "answer": "Pour permettre à chacun de voter librement",
+    "explanation": "Le secret du vote protège la liberté de choix de chaque électeur."
+  },
+  {
+    "id": "Q039A",
+    "category": "Élections",
+    "title": "Isoloir",
+    "question": "À quoi sert l’isoloir dans un bureau de vote ?",
+    "options": [
+      "À garantir le secret du vote",
+      "À compter les bulletins",
+      "À remplacer la carte d’identité",
+      "À annoncer les résultats"
+    ],
+    "answer": "À garantir le secret du vote",
+    "explanation": "L’isoloir permet à l’électeur de choisir son bulletin sans pression extérieure."
+  },
+  {
+    "id": "Q040A",
+    "category": "Élections",
+    "title": "Urne",
+    "question": "Dans quoi l’électeur dépose-t-il son bulletin ?",
+    "options": [
+      "Dans l’urne",
+      "Dans une boîte privée",
+      "Dans un registre médical",
+      "Dans un portefeuille"
+    ],
+    "answer": "Dans l’urne",
+    "explanation": "Le bulletin est déposé dans l’urne après vérification de l’identité de l’électeur."
+  },
+  {
+    "id": "Q041A",
+    "category": "Élections",
+    "title": "Présidentielle",
+    "question": "Quelle élection permet de choisir le président de la République ?",
+    "options": [
+      "L’élection présidentielle",
+      "L’élection municipale",
+      "L’élection syndicale",
+      "L’élection scolaire"
+    ],
+    "answer": "L’élection présidentielle",
+    "explanation": "Le président de la République est élu lors de l’élection présidentielle."
+  },
+  {
+    "id": "Q042A",
+    "category": "Élections",
+    "title": "Mandat présidentiel",
+    "question": "Quelle est la durée du mandat du président de la République ?",
+    "options": [
+      "5 ans",
+      "4 ans",
+      "6 ans",
+      "7 ans"
+    ],
+    "answer": "5 ans",
+    "explanation": "Depuis l’instauration du quinquennat, le mandat présidentiel dure 5 ans."
+  },
+  {
+    "id": "Q043A",
+    "category": "Élections",
+    "title": "Législatives",
+    "question": "Quelle élection permet d’élire les députés ?",
+    "options": [
+      "Les élections législatives",
+      "Les élections municipales",
+      "Les élections prud’homales",
+      "Les élections européennes uniquement"
+    ],
+    "answer": "Les élections législatives",
+    "explanation": "Les élections législatives permettent d’élire les députés à l’Assemblée nationale."
+  },
+  {
+    "id": "Q044A",
+    "category": "Élections",
+    "title": "Municipales",
+    "question": "Quelle élection permet de choisir les conseillers municipaux ?",
+    "options": [
+      "Les élections municipales",
+      "Les élections présidentielles",
+      "Les élections sénatoriales directes par tous",
+      "Les élections consulaires uniquement"
+    ],
+    "answer": "Les élections municipales",
+    "explanation": "Les élections municipales permettent de désigner les conseillers municipaux, qui élisent ensuite le maire."
+  },
+  {
+    "id": "Q045A",
+    "category": "Élections",
+    "title": "Européennes",
+    "question": "Quelle élection permet de choisir les députés européens ?",
+    "options": [
+      "Les élections européennes",
+      "Les élections départementales",
+      "Les élections municipales",
+      "Les élections judiciaires"
+    ],
+    "answer": "Les élections européennes",
+    "explanation": "Les citoyens votent aux élections européennes pour élire leurs représentants au Parlement européen."
+  },
+  {
+    "id": "Q046A",
+    "category": "Élections",
+    "title": "Référendum",
+    "question": "Qu’est-ce qu’un référendum ?",
+    "options": [
+      "Une consultation directe des citoyens sur une question",
+      "Un procès public",
+      "Une réunion d’entreprise",
+      "Un examen scolaire"
+    ],
+    "answer": "Une consultation directe des citoyens sur une question",
+    "explanation": "Le référendum permet aux citoyens de répondre directement à une question politique ou institutionnelle."
+  },
+  {
+    "id": "Q047A",
+    "category": "Élections",
+    "title": "Abstention",
+    "question": "Que signifie l’abstention lors d’une élection ?",
+    "options": [
+      "Ne pas participer au vote",
+      "Voter deux fois",
+      "Voter blanc uniquement",
+      "Contester automatiquement le résultat"
+    ],
+    "answer": "Ne pas participer au vote",
+    "explanation": "L’abstention désigne le fait de ne pas aller voter."
+  },
+  {
+    "id": "Q048A",
+    "category": "Élections",
+    "title": "Vote blanc",
+    "question": "Que signifie voter blanc ?",
+    "options": [
+      "Participer au vote sans choisir de candidat ou de liste",
+      "Voter en retard",
+      "Voter pour deux candidats",
+      "Voter sans être inscrit"
+    ],
+    "answer": "Participer au vote sans choisir de candidat ou de liste",
+    "explanation": "Le vote blanc exprime une participation sans choix parmi les candidats proposés."
+  },
+  {
+    "id": "Q049A",
+    "category": "Élections",
+    "title": "Inscription électorale",
+    "question": "Que faut-il généralement faire pour voter ?",
+    "options": [
+      "Être inscrit sur les listes électorales",
+      "Être membre d’un parti",
+      "Être propriétaire",
+      "Avoir un diplôme supérieur"
+    ],
+    "answer": "Être inscrit sur les listes électorales",
+    "explanation": "Pour voter, il faut remplir les conditions légales et être inscrit sur les listes électorales."
+  },
+  {
+    "id": "Q050A",
+    "category": "Élections",
+    "title": "Bureau de vote",
+    "question": "Où se déroule le vote le jour d’une élection ?",
+    "options": [
+      "Dans un bureau de vote",
+      "Dans une banque",
+      "Dans un tribunal uniquement",
+      "Dans une pharmacie"
+    ],
+    "answer": "Dans un bureau de vote",
+    "explanation": "Les électeurs votent dans un bureau de vote indiqué selon leur inscription électorale."
+  },
+  {
+    "id": "Q051A",
+    "category": "Élections",
+    "title": "Candidat",
+    "question": "Dans une démocratie, un candidat doit être choisi par…",
+    "options": [
+      "Les électeurs",
+      "Une seule famille",
+      "Une entreprise privée",
+      "Un tribunal avant chaque vote"
+    ],
+    "answer": "Les électeurs",
+    "explanation": "Les électeurs choisissent leurs représentants lors d’élections libres."
+  },
+  {
+    "id": "Q052A",
+    "category": "Élections",
+    "title": "Pluralisme",
+    "question": "Que signifie le pluralisme politique ?",
+    "options": [
+      "L’existence de plusieurs opinions et partis",
+      "Un seul parti obligatoire",
+      "L’interdiction du débat",
+      "Le refus des élections"
+    ],
+    "answer": "L’existence de plusieurs opinions et partis",
+    "explanation": "Le pluralisme permet la diversité des opinions et des choix politiques."
+  },
+  {
+    "id": "Q053A",
+    "category": "Élections",
+    "title": "Campagne électorale",
+    "question": "À quoi sert une campagne électorale ?",
+    "options": [
+      "Présenter des programmes et convaincre les électeurs",
+      "Remplacer le vote",
+      "Interdire les débats",
+      "Nommer les juges"
+    ],
+    "answer": "Présenter des programmes et convaincre les électeurs",
+    "explanation": "La campagne permet aux candidats de présenter leurs idées et aux électeurs de comparer les projets."
+  },
+  {
+    "id": "Q054A",
+    "category": "Élections",
+    "title": "Majorité",
+    "question": "Dans une élection, la majorité désigne généralement…",
+    "options": [
+      "Le plus grand nombre de voix selon les règles du scrutin",
+      "Le plus âgé des candidats",
+      "Le candidat le plus riche",
+      "Le vote des ministres uniquement"
+    ],
+    "answer": "Le plus grand nombre de voix selon les règles du scrutin",
+    "explanation": "La majorité dépend du mode de scrutin et permet de désigner les vainqueurs."
+  },
+  {
+    "id": "Q055A",
+    "category": "Élections",
+    "title": "Démocratie",
+    "question": "Dans une démocratie, le pouvoir politique repose sur…",
+    "options": [
+      "Le choix des citoyens",
+      "La naissance",
+      "La force uniquement",
+      "La richesse privée"
+    ],
+    "answer": "Le choix des citoyens",
+    "explanation": "La démocratie repose sur la participation des citoyens et le respect des libertés."
+  },
+  {
+    "id": "Q056A",
+    "category": "Droits et libertés",
+    "title": "DDHC",
+    "question": "En quelle année a été adoptée la Déclaration des droits de l’homme et du citoyen ?",
+    "options": [
+      "1789",
+      "1804",
+      "1905",
+      "1958"
+    ],
+    "answer": "1789",
+    "explanation": "La Déclaration des droits de l’homme et du citoyen date de 1789 et affirme des droits fondamentaux."
+  },
+  {
+    "id": "Q057A",
+    "category": "Droits et libertés",
+    "title": "Liberté d’expression",
+    "question": "Quelle liberté permet d’exprimer ses opinions dans le respect de la loi ?",
+    "options": [
+      "La liberté d’expression",
+      "La liberté de nuire",
+      "La liberté de diffamer",
+      "La liberté de frauder"
+    ],
+    "answer": "La liberté d’expression",
+    "explanation": "La liberté d’expression est protégée, mais elle connaît des limites fixées par la loi."
+  },
+  {
+    "id": "Q058A",
+    "category": "Droits et libertés",
+    "title": "Liberté de réunion",
+    "question": "Quelle liberté permet de se rassembler pacifiquement ?",
+    "options": [
+      "La liberté de réunion",
+      "La liberté de violence",
+      "La liberté fiscale",
+      "La liberté judiciaire"
+    ],
+    "answer": "La liberté de réunion",
+    "explanation": "La liberté de réunion permet aux personnes de se rassembler pacifiquement dans le respect des règles."
+  },
+  {
+    "id": "Q059A",
+    "category": "Droits et libertés",
+    "title": "Liberté d’association",
+    "question": "Quelle liberté permet de créer ou rejoindre une association ?",
+    "options": [
+      "La liberté d’association",
+      "La liberté de condamnation",
+      "La liberté d’expulsion",
+      "La liberté d’imposition"
+    ],
+    "answer": "La liberté d’association",
+    "explanation": "La liberté d’association permet de s’organiser collectivement autour d’un projet commun."
+  },
+  {
+    "id": "Q060A",
+    "category": "Droits et libertés",
+    "title": "Liberté de conscience",
+    "question": "Que protège la liberté de conscience ?",
+    "options": [
+      "Le droit d’avoir ou non une conviction religieuse ou philosophique",
+      "L’obligation d’avoir une religion",
+      "Le droit de refuser toutes les lois",
+      "L’obligation de penser comme l’État"
+    ],
+    "answer": "Le droit d’avoir ou non une conviction religieuse ou philosophique",
+    "explanation": "La liberté de conscience protège les convictions personnelles de chacun."
+  },
+  {
+    "id": "Q061A",
+    "category": "Droits et libertés",
+    "title": "Presse",
+    "question": "Pourquoi la liberté de la presse est-elle importante ?",
+    "options": [
+      "Elle permet d’informer et de débattre librement",
+      "Elle supprime la justice",
+      "Elle remplace les élections",
+      "Elle interdit les opinions"
+    ],
+    "answer": "Elle permet d’informer et de débattre librement",
+    "explanation": "La liberté de la presse est essentielle à l’information des citoyens et au débat démocratique."
+  },
+  {
+    "id": "Q062A",
+    "category": "Droits et libertés",
+    "title": "Non-discrimination",
+    "question": "La République française interdit notamment…",
+    "options": [
+      "Les discriminations",
+      "L’égalité devant la loi",
+      "L’accès aux services publics",
+      "La liberté de conscience"
+    ],
+    "answer": "Les discriminations",
+    "explanation": "La loi interdit les discriminations liées par exemple à l’origine, au sexe, au handicap, à la religion ou aux opinions."
+  },
+  {
+    "id": "Q063A",
+    "category": "Droits et libertés",
+    "title": "Égalité femmes-hommes",
+    "question": "Quel principe s’applique entre les femmes et les hommes ?",
+    "options": [
+      "L’égalité en droits",
+      "La supériorité d’un sexe",
+      "L’inégalité obligatoire",
+      "La séparation totale des droits"
+    ],
+    "answer": "L’égalité en droits",
+    "explanation": "Les femmes et les hommes sont égaux en droits dans la République française."
+  },
+  {
+    "id": "Q064A",
+    "category": "Droits et libertés",
+    "title": "Vie privée",
+    "question": "Quel droit protège les informations personnelles et l’intimité ?",
+    "options": [
+      "Le droit au respect de la vie privée",
+      "Le droit de tout publier sur autrui",
+      "Le droit de surveiller sans limite",
+      "Le droit de frauder"
+    ],
+    "answer": "Le droit au respect de la vie privée",
+    "explanation": "Le respect de la vie privée protège l’intimité et les données personnelles des personnes."
+  },
+  {
+    "id": "Q065A",
+    "category": "Droits et libertés",
+    "title": "Défense",
+    "question": "Dans un procès, une personne a droit…",
+    "options": [
+      "À la défense",
+      "À être condamnée sans explication",
+      "À être jugée sans avocat possible",
+      "À ne jamais être entendue"
+    ],
+    "answer": "À la défense",
+    "explanation": "Le droit à la défense permet à chacun de se défendre et d’être assisté, notamment par un avocat."
+  },
+  {
+    "id": "Q066A",
+    "category": "Droits et libertés",
+    "title": "Présomption d’innocence",
+    "question": "Que signifie la présomption d’innocence ?",
+    "options": [
+      "Une personne est considérée innocente tant qu’elle n’est pas condamnée",
+      "Une personne est toujours coupable",
+      "La police décide seule de la culpabilité",
+      "Un témoin condamne automatiquement"
+    ],
+    "answer": "Une personne est considérée innocente tant qu’elle n’est pas condamnée",
+    "explanation": "La présomption d’innocence protège toute personne tant que sa culpabilité n’est pas légalement établie."
+  },
+  {
+    "id": "Q067A",
+    "category": "Droits et libertés",
+    "title": "Droit d’asile",
+    "question": "Que permet le droit d’asile ?",
+    "options": [
+      "Protéger une personne persécutée",
+      "Éviter tous les impôts",
+      "Voter sans conditions",
+      "Supprimer les frontières"
+    ],
+    "answer": "Protéger une personne persécutée",
+    "explanation": "Le droit d’asile peut protéger une personne menacée ou persécutée dans son pays."
+  },
+  {
+    "id": "Q068A",
+    "category": "Droits et libertés",
+    "title": "Droit au recours",
+    "question": "Si une décision administrative semble injuste, que peut faire un citoyen ?",
+    "options": [
+      "Exercer un recours",
+      "Se faire justice lui-même",
+      "Ignorer toutes les lois",
+      "Supprimer son dossier"
+    ],
+    "answer": "Exercer un recours",
+    "explanation": "Le droit au recours permet de contester une décision devant l’administration ou la justice."
+  },
+  {
+    "id": "Q069A",
+    "category": "Droits et libertés",
+    "title": "Droit de grève",
+    "question": "Le droit de grève permet notamment…",
+    "options": [
+      "De cesser collectivement le travail pour défendre des revendications",
+      "De détruire les biens publics",
+      "De refuser toute loi",
+      "De voter à la place des autres"
+    ],
+    "answer": "De cesser collectivement le travail pour défendre des revendications",
+    "explanation": "Le droit de grève est reconnu, mais il s’exerce dans un cadre légal."
+  },
+  {
+    "id": "Q070A",
+    "category": "Droits et libertés",
+    "title": "Syndicat",
+    "question": "À quoi sert un syndicat ?",
+    "options": [
+      "À défendre les intérêts des travailleurs",
+      "À remplacer le Parlement",
+      "À rendre la justice pénale",
+      "À gérer les passeports"
+    ],
+    "answer": "À défendre les intérêts des travailleurs",
+    "explanation": "Les syndicats défendent les intérêts professionnels et sociaux des travailleurs."
+  },
+  {
+    "id": "Q071A",
+    "category": "Droits et libertés",
+    "title": "Propriété",
+    "question": "Le droit de propriété signifie notamment…",
+    "options": [
+      "Pouvoir posséder un bien dans le respect de la loi",
+      "Pouvoir voler un bien",
+      "Ne jamais payer de charges",
+      "Tout posséder sans limite publique"
+    ],
+    "answer": "Pouvoir posséder un bien dans le respect de la loi",
+    "explanation": "Le droit de propriété est reconnu, mais il peut être encadré par la loi et l’intérêt général."
+  },
+  {
+    "id": "Q072A",
+    "category": "Droits et libertés",
+    "title": "Dignité",
+    "question": "Quel principe protège chaque personne contre les traitements dégradants ?",
+    "options": [
+      "La dignité humaine",
+      "La supériorité sociale",
+      "La vengeance privée",
+      "Le privilège héréditaire"
+    ],
+    "answer": "La dignité humaine",
+    "explanation": "La dignité humaine est un principe fondamental qui protège chaque personne."
+  },
+  {
+    "id": "Q073A",
+    "category": "Droits et libertés",
+    "title": "Égalité loi",
+    "question": "Devant la loi, les citoyens sont…",
+    "options": [
+      "Égaux",
+      "Classés par richesse",
+      "Classés par origine",
+      "Classés par religion"
+    ],
+    "answer": "Égaux",
+    "explanation": "L’égalité devant la loi est un principe fondamental de la République."
+  },
+  {
+    "id": "Q074A",
+    "category": "Droits et libertés",
+    "title": "Liberté de circulation",
+    "question": "Quelle liberté permet de se déplacer dans le respect des règles ?",
+    "options": [
+      "La liberté de circulation",
+      "La liberté de stationner partout",
+      "La liberté de conduire sans permis",
+      "La liberté de refuser les contrôles"
+    ],
+    "answer": "La liberté de circulation",
+    "explanation": "La liberté de circulation existe, mais elle est encadrée par des règles de sécurité et d’ordre public."
+  },
+  {
+    "id": "Q075A",
+    "category": "Droits et libertés",
+    "title": "Sécurité",
+    "question": "Un État de droit protège les libertés en s’appuyant sur…",
+    "options": [
+      "Des lois connues et contrôlées par la justice",
+      "Des décisions secrètes",
+      "La force privée",
+      "L’arbitraire"
+    ],
+    "answer": "Des lois connues et contrôlées par la justice",
+    "explanation": "Dans un État de droit, l’action publique doit respecter la loi et peut être contrôlée."
+  },
+  {
+    "id": "Q076A",
+    "category": "Devoirs citoyens",
+    "title": "Respect de la loi",
+    "question": "Quel devoir s’impose à toute personne vivant en France ?",
+    "options": [
+      "Respecter la loi",
+      "Choisir les lois à appliquer",
+      "Ignorer les décisions de justice",
+      "Refuser toute règle commune"
+    ],
+    "answer": "Respecter la loi",
+    "explanation": "Le respect de la loi est nécessaire pour vivre ensemble dans une société organisée."
+  },
+  {
+    "id": "Q077A",
+    "category": "Devoirs citoyens",
+    "title": "Impôts",
+    "question": "À quoi servent les impôts ?",
+    "options": [
+      "À financer les services publics",
+      "À financer uniquement les partis",
+      "À remplacer les salaires",
+      "À empêcher les élections"
+    ],
+    "answer": "À financer les services publics",
+    "explanation": "Les impôts financent notamment l’école, la santé, la sécurité, les routes et les services publics."
+  },
+  {
+    "id": "Q078A",
+    "category": "Devoirs citoyens",
+    "title": "Citoyen",
+    "question": "Quel comportement correspond à un devoir citoyen ?",
+    "options": [
+      "Respecter les autres et les règles communes",
+      "Insulter les agents publics",
+      "Détruire les biens publics",
+      "Refuser toute solidarité"
+    ],
+    "answer": "Respecter les autres et les règles communes",
+    "explanation": "La citoyenneté suppose de respecter les autres, les règles et les institutions."
+  },
+  {
+    "id": "Q079A",
+    "category": "Devoirs citoyens",
+    "title": "Jury",
+    "question": "Un citoyen peut être appelé à participer à la justice comme…",
+    "options": [
+      "Jurée ou juré d’assises",
+      "Président sans élection",
+      "Ministre automatique",
+      "Préfet privé"
+    ],
+    "answer": "Jurée ou juré d’assises",
+    "explanation": "Dans certains cas, des citoyens peuvent participer à la justice comme jurés d’assises."
+  },
+  {
+    "id": "Q080A",
+    "category": "Devoirs citoyens",
+    "title": "Recensement",
+    "question": "Le recensement citoyen concerne notamment les jeunes Français à partir de…",
+    "options": [
+      "16 ans",
+      "10 ans",
+      "25 ans",
+      "40 ans"
+    ],
+    "answer": "16 ans",
+    "explanation": "Le recensement citoyen est une démarche obligatoire pour les jeunes Français à partir de 16 ans."
+  },
+  {
+    "id": "Q081A",
+    "category": "Devoirs citoyens",
+    "title": "JDC",
+    "question": "Que signifie JDC ?",
+    "options": [
+      "Journée défense et citoyenneté",
+      "Justice départementale civile",
+      "Journée du commerce",
+      "Jeunesse démocratique communale"
+    ],
+    "answer": "Journée défense et citoyenneté",
+    "explanation": "La JDC est une étape du parcours citoyen des jeunes Français."
+  },
+  {
+    "id": "Q082A",
+    "category": "Devoirs citoyens",
+    "title": "Service public",
+    "question": "Comment doit-on se comporter dans un service public ?",
+    "options": [
+      "Avec respect envers les agents et les usagers",
+      "Avec violence",
+      "En refusant toute règle",
+      "En exigeant un traitement illégal"
+    ],
+    "answer": "Avec respect envers les agents et les usagers",
+    "explanation": "Les services publics fonctionnent mieux quand chacun respecte les agents, les usagers et les procédures."
+  },
+  {
+    "id": "Q083A",
+    "category": "Devoirs citoyens",
+    "title": "Bien public",
+    "question": "Pourquoi faut-il respecter les biens publics ?",
+    "options": [
+      "Parce qu’ils appartiennent à la collectivité",
+      "Parce qu’ils appartiennent à une seule personne",
+      "Parce qu’ils sont inutiles",
+      "Parce qu’ils remplacent les lois"
+    ],
+    "answer": "Parce qu’ils appartiennent à la collectivité",
+    "explanation": "Les biens publics sont financés par la collectivité et servent à tous."
+  },
+  {
+    "id": "Q084A",
+    "category": "Devoirs citoyens",
+    "title": "Solidarité",
+    "question": "Quel principe justifie l’aide aux personnes en difficulté ?",
+    "options": [
+      "La solidarité nationale",
+      "La sélection par richesse",
+      "Le hasard uniquement",
+      "La préférence familiale obligatoire"
+    ],
+    "answer": "La solidarité nationale",
+    "explanation": "La solidarité nationale permet d’aider les personnes confrontées à la maladie, au chômage, au handicap ou à la vieillesse."
+  },
+  {
+    "id": "Q085A",
+    "category": "Devoirs citoyens",
+    "title": "Fraude",
+    "question": "Pourquoi la fraude aux prestations ou aux impôts est-elle grave ?",
+    "options": [
+      "Elle nuit à la solidarité et à la confiance collective",
+      "Elle renforce les services publics",
+      "Elle est toujours autorisée",
+      "Elle remplace le vote"
+    ],
+    "answer": "Elle nuit à la solidarité et à la confiance collective",
+    "explanation": "La fraude affaiblit les ressources communes et porte atteinte à l’égalité devant la loi."
+  },
+  {
+    "id": "Q086A",
+    "category": "Devoirs citoyens",
+    "title": "Vote",
+    "question": "Le vote est à la fois un droit et…",
+    "options": [
+      "Un devoir civique",
+      "Une obligation pénale permanente",
+      "Un acte interdit",
+      "Un service payant"
+    ],
+    "answer": "Un devoir civique",
+    "explanation": "Voter permet de participer à la vie démocratique. C’est un droit et un devoir civique."
+  },
+  {
+    "id": "Q087A",
+    "category": "Devoirs citoyens",
+    "title": "Respect autrui",
+    "question": "La liberté de chacun s’arrête là où…",
+    "options": [
+      "Commence celle des autres",
+      "Commence le refus de la loi",
+      "Commence l’intérêt privé uniquement",
+      "Commence le silence obligatoire"
+    ],
+    "answer": "Commence celle des autres",
+    "explanation": "Cette idée rappelle que la liberté doit se concilier avec le respect des droits d’autrui."
+  },
+  {
+    "id": "Q088A",
+    "category": "Devoirs citoyens",
+    "title": "Violence",
+    "question": "Dans un désaccord, le citoyen doit privilégier…",
+    "options": [
+      "Le dialogue et les voies légales",
+      "La violence",
+      "La menace",
+      "La vengeance"
+    ],
+    "answer": "Le dialogue et les voies légales",
+    "explanation": "Les désaccords doivent se régler par le dialogue, le vote, le recours ou la justice, pas par la violence."
+  },
+  {
+    "id": "Q089A",
+    "category": "Devoirs citoyens",
+    "title": "Environnement",
+    "question": "Respecter l’environnement relève aussi…",
+    "options": [
+      "D’une responsabilité citoyenne",
+      "D’un choix toujours inutile",
+      "D’une interdiction de trier",
+      "D’un privilège privé"
+    ],
+    "answer": "D’une responsabilité citoyenne",
+    "explanation": "La protection de l’environnement fait partie des responsabilités collectives et individuelles."
+  },
+  {
+    "id": "Q090A",
+    "category": "Devoirs citoyens",
+    "title": "Signalement",
+    "question": "Face à une situation dangereuse ou illégale, il faut plutôt…",
+    "options": [
+      "Alerter les autorités compétentes",
+      "Se faire justice soi-même",
+      "Diffuser des rumeurs",
+      "Cacher les faits graves"
+    ],
+    "answer": "Alerter les autorités compétentes",
+    "explanation": "Alerter les autorités permet d’agir légalement et d’éviter l’escalade."
+  },
+  {
+    "id": "Q091A",
+    "category": "Laïcité",
+    "title": "Définition",
+    "question": "Que signifie la laïcité ?",
+    "options": [
+      "La séparation de l’État et des religions",
+      "L’interdiction de croire",
+      "L’obligation d’avoir une religion",
+      "La domination d’une religion"
+    ],
+    "answer": "La séparation de l’État et des religions",
+    "explanation": "La laïcité garantit la liberté de conscience et la neutralité de l’État face aux religions."
+  },
+  {
+    "id": "Q092A",
+    "category": "Laïcité",
+    "title": "Loi 1905",
+    "question": "Quelle loi est associée à la séparation des Églises et de l’État ?",
+    "options": [
+      "La loi de 1905",
+      "La loi de 1789",
+      "La loi de 1958",
+      "La loi de 2000"
+    ],
+    "answer": "La loi de 1905",
+    "explanation": "La loi de 1905 est un texte majeur sur la séparation des Églises et de l’État."
+  },
+  {
+    "id": "Q093A",
+    "category": "Laïcité",
+    "title": "Neutralité",
+    "question": "Dans un service public, l’État doit être…",
+    "options": [
+      "Neutre",
+      "Religieux",
+      "Partisan",
+      "Commercial uniquement"
+    ],
+    "answer": "Neutre",
+    "explanation": "La neutralité du service public garantit un traitement égal de tous les usagers."
+  },
+  {
+    "id": "Q094A",
+    "category": "Laïcité",
+    "title": "Liberté de culte",
+    "question": "La laïcité garantit aussi…",
+    "options": [
+      "La liberté de pratiquer ou non une religion",
+      "L’obligation de pratiquer",
+      "L’interdiction totale des religions",
+      "Le choix d’une religion officielle"
+    ],
+    "answer": "La liberté de pratiquer ou non une religion",
+    "explanation": "La laïcité protège à la fois les croyants, les non-croyants et la liberté de conscience."
+  },
+  {
+    "id": "Q095A",
+    "category": "Laïcité",
+    "title": "École publique",
+    "question": "Quel principe s’applique à l’école publique ?",
+    "options": [
+      "La neutralité et la laïcité",
+      "La promotion d’une religion",
+      "Le refus de tous les élèves",
+      "La privatisation obligatoire"
+    ],
+    "answer": "La neutralité et la laïcité",
+    "explanation": "L’école publique respecte la laïcité et accueille les élèves sans distinction de religion."
+  },
+  {
+    "id": "Q096A",
+    "category": "Laïcité",
+    "title": "Agent public",
+    "question": "Un agent public doit exercer ses fonctions avec…",
+    "options": [
+      "Neutralité",
+      "Préférence religieuse",
+      "Propagande politique",
+      "Traitement inégal"
+    ],
+    "answer": "Neutralité",
+    "explanation": "L’agent public représente le service public et doit respecter la neutralité."
+  },
+  {
+    "id": "Q097A",
+    "category": "Laïcité",
+    "title": "Usager",
+    "question": "Un usager d’un service public doit être traité…",
+    "options": [
+      "De manière égale",
+      "Selon sa religion",
+      "Selon son origine",
+      "Selon sa richesse uniquement"
+    ],
+    "answer": "De manière égale",
+    "explanation": "La laïcité et l’égalité imposent un traitement impartial des usagers."
+  },
+  {
+    "id": "Q098A",
+    "category": "Laïcité",
+    "title": "Conscience",
+    "question": "La liberté de conscience signifie que chacun peut…",
+    "options": [
+      "Croire, ne pas croire ou changer de conviction",
+      "Être forcé de croire",
+      "Interdire les opinions des autres",
+      "Imposer sa croyance à l’État"
+    ],
+    "answer": "Croire, ne pas croire ou changer de conviction",
+    "explanation": "La liberté de conscience protège les convictions personnelles."
+  },
+  {
+    "id": "Q099A",
+    "category": "Laïcité",
+    "title": "Religion et loi",
+    "question": "En France, les règles communes sont fixées principalement par…",
+    "options": [
+      "La loi républicaine",
+      "Une autorité religieuse",
+      "Une famille",
+      "Une entreprise"
+    ],
+    "answer": "La loi républicaine",
+    "explanation": "La loi républicaine s’applique à tous, indépendamment des croyances personnelles."
+  },
+  {
+    "id": "Q100A",
+    "category": "Laïcité",
+    "title": "Respect",
+    "question": "La laïcité demande notamment…",
+    "options": [
+      "Le respect des convictions dans le cadre de la loi",
+      "Le mépris des croyants",
+      "Le rejet des non-croyants",
+      "La suppression des libertés"
+    ],
+    "answer": "Le respect des convictions dans le cadre de la loi",
+    "explanation": "La laïcité n’est pas contre les religions : elle protège la liberté de conscience et l’égalité."
+  },
+  {
+    "id": "Q101A",
+    "category": "Laïcité",
+    "title": "Espace public",
+    "question": "La laïcité permet de vivre ensemble en garantissant…",
+    "options": [
+      "Un cadre commun neutre",
+      "Une religion obligatoire",
+      "Une inégalité légale",
+      "La disparition des institutions"
+    ],
+    "answer": "Un cadre commun neutre",
+    "explanation": "La neutralité de l’État crée un cadre commun pour des citoyens aux convictions diverses."
+  },
+  {
+    "id": "Q102A",
+    "category": "Laïcité",
+    "title": "Discrimination religieuse",
+    "question": "Refuser un service à une personne en raison de sa religion peut être…",
+    "options": [
+      "Une discrimination",
+      "Une obligation républicaine",
+      "Un droit automatique",
+      "Une règle municipale générale"
+    ],
+    "answer": "Une discrimination",
+    "explanation": "La loi interdit les discriminations, notamment en raison de la religion réelle ou supposée."
+  },
+  {
+    "id": "Q103A",
+    "category": "Histoire",
+    "title": "Révolution française",
+    "question": "Quel événement majeur commence en 1789 ?",
+    "options": [
+      "La Révolution française",
+      "La Première Guerre mondiale",
+      "La création de l’euro",
+      "La Ve République"
+    ],
+    "answer": "La Révolution française",
+    "explanation": "La Révolution française commence en 1789 et marque une rupture majeure dans l’histoire politique française."
+  },
+  {
+    "id": "Q104A",
+    "category": "Histoire",
+    "title": "Prise Bastille",
+    "question": "Que s’est-il passé le 14 juillet 1789 ?",
+    "options": [
+      "La prise de la Bastille",
+      "La fin de la Seconde Guerre mondiale",
+      "La création de l’Union européenne",
+      "L’abolition de la peine de mort"
+    ],
+    "answer": "La prise de la Bastille",
+    "explanation": "La prise de la Bastille est l’un des événements symboliques de la Révolution française."
+  },
+  {
+    "id": "Q105A",
+    "category": "Histoire",
+    "title": "Nuit 4 août",
+    "question": "Que rappelle la nuit du 4 août 1789 ?",
+    "options": [
+      "L’abolition des privilèges",
+      "La création du Sénat",
+      "La victoire de 1945",
+      "La naissance de l’euro"
+    ],
+    "answer": "L’abolition des privilèges",
+    "explanation": "La nuit du 4 août 1789 marque l’abolition des privilèges féodaux."
+  },
+  {
+    "id": "Q106A",
+    "category": "Histoire",
+    "title": "DDHC 1789",
+    "question": "Quel texte fondamental est adopté en 1789 ?",
+    "options": [
+      "La Déclaration des droits de l’homme et du citoyen",
+      "Le Code civil",
+      "La Constitution de 1958",
+      "Le traité de Maastricht"
+    ],
+    "answer": "La Déclaration des droits de l’homme et du citoyen",
+    "explanation": "La Déclaration de 1789 affirme notamment la liberté, l’égalité et la souveraineté de la nation."
+  },
+  {
+    "id": "Q107A",
+    "category": "Histoire",
+    "title": "République 1792",
+    "question": "En 1792, la France proclame…",
+    "options": [
+      "La Première République",
+      "La Ve République",
+      "L’Empire européen",
+      "La monarchie absolue"
+    ],
+    "answer": "La Première République",
+    "explanation": "La Première République est proclamée en 1792 après la chute de la monarchie."
+  },
+  {
+    "id": "Q108A",
+    "category": "Histoire",
+    "title": "Code civil",
+    "question": "Quel texte est associé à Napoléon Bonaparte en 1804 ?",
+    "options": [
+      "Le Code civil",
+      "La loi de 1905",
+      "La Constitution de 1958",
+      "La Déclaration de 1789"
+    ],
+    "answer": "Le Code civil",
+    "explanation": "Le Code civil de 1804 organise de nombreux aspects du droit civil français."
+  },
+  {
+    "id": "Q109A",
+    "category": "Histoire",
+    "title": "Abolition esclavage",
+    "question": "En quelle année l’esclavage est-il définitivement aboli en France ?",
+    "options": [
+      "1848",
+      "1789",
+      "1918",
+      "1958"
+    ],
+    "answer": "1848",
+    "explanation": "L’esclavage est définitivement aboli en France en 1848."
+  },
+  {
+    "id": "Q110A",
+    "category": "Histoire",
+    "title": "Suffrage masculin",
+    "question": "En 1848, un progrès démocratique important est…",
+    "options": [
+      "Le suffrage universel masculin",
+      "Le droit de vote des femmes",
+      "La création de l’euro",
+      "La fin de la Ve République"
+    ],
+    "answer": "Le suffrage universel masculin",
+    "explanation": "En 1848, le suffrage universel masculin est instauré en France."
+  },
+  {
+    "id": "Q111A",
+    "category": "Histoire",
+    "title": "École Ferry",
+    "question": "Les lois Jules Ferry sont associées à…",
+    "options": [
+      "L’école gratuite, laïque et obligatoire",
+      "La création de l’euro",
+      "Le droit de vote à 16 ans",
+      "La suppression du Parlement"
+    ],
+    "answer": "L’école gratuite, laïque et obligatoire",
+    "explanation": "Les lois Jules Ferry ont renforcé l’école publique gratuite, laïque et obligatoire."
+  },
+  {
+    "id": "Q112A",
+    "category": "Histoire",
+    "title": "1905",
+    "question": "Que marque la loi de 1905 ?",
+    "options": [
+      "La séparation des Églises et de l’État",
+      "La création du drapeau",
+      "La fin de la Première Guerre mondiale",
+      "La naissance de la Ve République"
+    ],
+    "answer": "La séparation des Églises et de l’État",
+    "explanation": "La loi de 1905 est un pilier de la laïcité française."
+  },
+  {
+    "id": "Q113A",
+    "category": "Histoire",
+    "title": "Première Guerre mondiale",
+    "question": "Quelles sont les dates de la Première Guerre mondiale ?",
+    "options": [
+      "1914-1918",
+      "1939-1945",
+      "1789-1799",
+      "1958-1962"
+    ],
+    "answer": "1914-1918",
+    "explanation": "La Première Guerre mondiale s’est déroulée de 1914 à 1918."
+  },
+  {
+    "id": "Q114A",
+    "category": "Histoire",
+    "title": "11 novembre",
+    "question": "Que commémore le 11 novembre ?",
+    "options": [
+      "L’armistice de 1918",
+      "La victoire de 1945",
+      "La prise de la Bastille",
+      "La création de la République"
+    ],
+    "answer": "L’armistice de 1918",
+    "explanation": "Le 11 novembre commémore l’armistice qui met fin aux combats de la Première Guerre mondiale."
+  },
+  {
+    "id": "Q115A",
+    "category": "Histoire",
+    "title": "Seconde Guerre mondiale",
+    "question": "Quelles sont les dates de la Seconde Guerre mondiale en Europe ?",
+    "options": [
+      "1939-1945",
+      "1914-1918",
+      "1789-1792",
+      "1958-1969"
+    ],
+    "answer": "1939-1945",
+    "explanation": "La Seconde Guerre mondiale s’est déroulée de 1939 à 1945 en Europe."
+  },
+  {
+    "id": "Q116A",
+    "category": "Histoire",
+    "title": "8 mai",
+    "question": "Que commémore le 8 mai en France ?",
+    "options": [
+      "La victoire de 1945",
+      "La fête du travail",
+      "La prise de la Bastille",
+      "La loi de 1905"
+    ],
+    "answer": "La victoire de 1945",
+    "explanation": "Le 8 mai commémore la victoire des Alliés et la fin de la Seconde Guerre mondiale en Europe."
+  },
+  {
+    "id": "Q117A",
+    "category": "Histoire",
+    "title": "Appel 18 juin",
+    "question": "À qui associe-t-on l’appel du 18 juin 1940 ?",
+    "options": [
+      "Charles de Gaulle",
+      "Napoléon Bonaparte",
+      "Jules Ferry",
+      "Victor Hugo"
+    ],
+    "answer": "Charles de Gaulle",
+    "explanation": "L’appel du 18 juin 1940 est associé au général de Gaulle et à la Résistance."
+  },
+  {
+    "id": "Q118A",
+    "category": "Histoire",
+    "title": "Résistance",
+    "question": "Pendant la Seconde Guerre mondiale, la Résistance désigne…",
+    "options": [
+      "Ceux qui s’opposaient à l’occupation nazie et au régime de Vichy",
+      "Les partisans de la collaboration",
+      "Les créateurs de l’euro",
+      "Les députés européens"
+    ],
+    "answer": "Ceux qui s’opposaient à l’occupation nazie et au régime de Vichy",
+    "explanation": "La Résistance a joué un rôle majeur dans la lutte contre l’occupation et pour la libération."
+  },
+  {
+    "id": "Q119A",
+    "category": "Histoire",
+    "title": "Droit de vote femmes",
+    "question": "En France, les femmes obtiennent le droit de vote en…",
+    "options": [
+      "1944",
+      "1789",
+      "1848",
+      "1981"
+    ],
+    "answer": "1944",
+    "explanation": "Les femmes obtiennent le droit de vote en 1944 et votent pour la première fois en 1945."
+  },
+  {
+    "id": "Q120A",
+    "category": "Histoire",
+    "title": "Sécurité sociale",
+    "question": "La Sécurité sociale est créée en France après…",
+    "options": [
+      "La Seconde Guerre mondiale",
+      "La Révolution française uniquement",
+      "La création de l’euro",
+      "La loi de 1905"
+    ],
+    "answer": "La Seconde Guerre mondiale",
+    "explanation": "La Sécurité sociale est mise en place après la Seconde Guerre mondiale, dans un esprit de solidarité."
+  },
+  {
+    "id": "Q121A",
+    "category": "Histoire",
+    "title": "Abolition peine mort",
+    "question": "En quelle année la peine de mort est-elle abolie en France ?",
+    "options": [
+      "1981",
+      "1905",
+      "1944",
+      "2002"
+    ],
+    "answer": "1981",
+    "explanation": "La peine de mort est abolie en France en 1981."
+  },
+  {
+    "id": "Q122A",
+    "category": "Histoire",
+    "title": "Quinquennat",
+    "question": "Quelle réforme a instauré le mandat présidentiel de 5 ans ?",
+    "options": [
+      "Le quinquennat",
+      "Le référendum local",
+      "La monarchie",
+      "Le Code civil"
+    ],
+    "answer": "Le quinquennat",
+    "explanation": "Le quinquennat a remplacé le septennat pour le mandat présidentiel."
+  },
+  {
+    "id": "Q123A",
+    "category": "Europe",
+    "title": "Union européenne",
+    "question": "Qu’est-ce que l’Union européenne ?",
+    "options": [
+      "Une organisation de coopération entre États européens",
+      "Un seul pays",
+      "Une religion commune",
+      "Une armée privée obligatoire"
+    ],
+    "answer": "Une organisation de coopération entre États européens",
+    "explanation": "L’Union européenne regroupe des États qui coopèrent dans différents domaines."
+  },
+  {
+    "id": "Q124A",
+    "category": "Europe",
+    "title": "Paix",
+    "question": "L’un des objectifs historiques de la construction européenne est…",
+    "options": [
+      "La paix entre les peuples européens",
+      "La suppression des États",
+      "La fin de toutes les élections",
+      "La fermeture des frontières intérieures à toute circulation"
+    ],
+    "answer": "La paix entre les peuples européens",
+    "explanation": "Après les guerres mondiales, la construction européenne vise notamment la paix et la coopération."
+  },
+  {
+    "id": "Q125A",
+    "category": "Europe",
+    "title": "Euro",
+    "question": "Quelle monnaie est utilisée par plusieurs pays de l’Union européenne, dont la France ?",
+    "options": [
+      "L’euro",
+      "Le franc français",
+      "Le dollar européen",
+      "La livre française"
+    ],
+    "answer": "L’euro",
+    "explanation": "La France utilise l’euro, monnaie commune à plusieurs États européens."
+  },
+  {
+    "id": "Q126A",
+    "category": "Europe",
+    "title": "Parlement européen",
+    "question": "Quelle institution européenne est élue directement par les citoyens ?",
+    "options": [
+      "Le Parlement européen",
+      "La Cour de cassation",
+      "Le Sénat français",
+      "La mairie"
+    ],
+    "answer": "Le Parlement européen",
+    "explanation": "Les citoyens de l’Union européenne élisent les députés européens au suffrage universel direct."
+  },
+  {
+    "id": "Q127A",
+    "category": "Europe",
+    "title": "9 mai",
+    "question": "Que célèbre la Journée de l’Europe le 9 mai ?",
+    "options": [
+      "La construction européenne",
+      "La fête nationale française",
+      "La rentrée scolaire",
+      "La fin de la monarchie"
+    ],
+    "answer": "La construction européenne",
+    "explanation": "Le 9 mai est associé à la déclaration Schuman et à l’idée de construction européenne."
+  },
+  {
+    "id": "Q128A",
+    "category": "Europe",
+    "title": "Citoyenneté européenne",
+    "question": "Un citoyen français est aussi…",
+    "options": [
+      "Citoyen de l’Union européenne",
+      "Citoyen de tous les pays du monde",
+      "Député européen automatiquement",
+      "Président européen automatiquement"
+    ],
+    "answer": "Citoyen de l’Union européenne",
+    "explanation": "La nationalité d’un État membre donne aussi la citoyenneté de l’Union européenne."
+  },
+  {
+    "id": "Q129A",
+    "category": "Europe",
+    "title": "Schengen",
+    "question": "L’espace Schengen facilite principalement…",
+    "options": [
+      "La circulation entre certains pays européens",
+      "La suppression de toutes les lois",
+      "La création d’une seule langue",
+      "L’élection du président français"
+    ],
+    "answer": "La circulation entre certains pays européens",
+    "explanation": "L’espace Schengen facilite la circulation entre certains États participants."
+  },
+  {
+    "id": "Q130A",
+    "category": "Europe",
+    "title": "Drapeau européen",
+    "question": "Le drapeau européen est composé…",
+    "options": [
+      "D’étoiles jaunes sur fond bleu",
+      "De bandes rouges et blanches",
+      "D’un coq doré",
+      "D’une Marianne verte"
+    ],
+    "answer": "D’étoiles jaunes sur fond bleu",
+    "explanation": "Le drapeau européen comporte des étoiles jaunes sur fond bleu."
+  },
+  {
+    "id": "Q131A",
+    "category": "Europe",
+    "title": "Ode à la joie",
+    "question": "Quel symbole musical est associé à l’Union européenne ?",
+    "options": [
+      "L’Ode à la joie",
+      "La Marseillaise",
+      "Le Chant du départ",
+      "Le Temps des cerises"
+    ],
+    "answer": "L’Ode à la joie",
+    "explanation": "L’Ode à la joie est l’hymne européen."
+  },
+  {
+    "id": "Q132A",
+    "category": "Europe",
+    "title": "Droits UE",
+    "question": "Un citoyen européen peut notamment…",
+    "options": [
+      "Voter aux élections européennes",
+      "Voter à toutes les élections nationales sans conditions",
+      "Devenir président français automatiquement",
+      "Ignorer les lois nationales"
+    ],
+    "answer": "Voter aux élections européennes",
+    "explanation": "La citoyenneté européenne donne notamment le droit de vote aux élections européennes."
+  },
+  {
+    "id": "Q133A",
+    "category": "Europe",
+    "title": "Conseil de l’Europe",
+    "question": "Quel texte européen protège les droits fondamentaux ?",
+    "options": [
+      "La Convention européenne des droits de l’homme",
+      "Le règlement d’une mairie",
+      "Le Code de la route uniquement",
+      "Un contrat privé"
+    ],
+    "answer": "La Convention européenne des droits de l’homme",
+    "explanation": "La Convention européenne des droits de l’homme protège des droits et libertés fondamentaux."
+  },
+  {
+    "id": "Q134A",
+    "category": "Europe",
+    "title": "Strasbourg",
+    "question": "Quelle ville française accueille notamment le Parlement européen ?",
+    "options": [
+      "Strasbourg",
+      "Marseille",
+      "Lille",
+      "Bordeaux"
+    ],
+    "answer": "Strasbourg",
+    "explanation": "Strasbourg accueille notamment des sessions du Parlement européen."
+  },
+  {
+    "id": "Q135A",
+    "category": "Europe",
+    "title": "UE et France",
+    "question": "La France est membre…",
+    "options": [
+      "De l’Union européenne",
+      "D’une monarchie européenne",
+      "D’un empire colonial européen",
+      "D’une confédération sportive uniquement"
+    ],
+    "answer": "De l’Union européenne",
+    "explanation": "La France fait partie des États membres de l’Union européenne."
+  },
+  {
+    "id": "Q136A",
+    "category": "Europe",
+    "title": "Frontières",
+    "question": "L’Union européenne repose notamment sur…",
+    "options": [
+      "Des coopérations économiques, politiques et juridiques",
+      "La disparition de tous les gouvernements",
+      "L’interdiction du vote",
+      "Une nationalité unique obligatoire"
+    ],
+    "answer": "Des coopérations économiques, politiques et juridiques",
+    "explanation": "L’Union européenne fonctionne par des traités et des institutions communes."
+  },
+  {
+    "id": "Q137A",
+    "category": "Europe",
+    "title": "Mobilité",
+    "question": "La citoyenneté européenne facilite notamment…",
+    "options": [
+      "La mobilité dans l’Union européenne",
+      "La suppression des passeports dans le monde entier",
+      "Le droit automatique à tout emploi public",
+      "L’interdiction de travailler à l’étranger"
+    ],
+    "answer": "La mobilité dans l’Union européenne",
+    "explanation": "La citoyenneté européenne favorise la circulation, le séjour et certains droits dans l’Union."
+  },
+  {
+    "id": "Q138A",
+    "category": "Administration",
+    "title": "Commune",
+    "question": "Quelle est la collectivité territoriale de base en France ?",
+    "options": [
+      "La commune",
+      "L’ambassade",
+      "Le tribunal",
+      "Le ministère"
+    ],
+    "answer": "La commune",
+    "explanation": "La commune est l’échelon local de base. Elle est dirigée par un conseil municipal et un maire."
+  },
+  {
+    "id": "Q139A",
+    "category": "Administration",
+    "title": "Maire",
+    "question": "Qui dirige la commune ?",
+    "options": [
+      "Le maire",
+      "Le préfet",
+      "Le président de la République",
+      "Le juge"
+    ],
+    "answer": "Le maire",
+    "explanation": "Le maire est l’exécutif de la commune et représente aussi l’État pour certaines missions."
+  },
+  {
+    "id": "Q140A",
+    "category": "Administration",
+    "title": "Conseil municipal",
+    "question": "Qui élit le maire ?",
+    "options": [
+      "Le conseil municipal",
+      "Le président de la République directement",
+      "La police municipale",
+      "Le tribunal administratif"
+    ],
+    "answer": "Le conseil municipal",
+    "explanation": "Après les élections municipales, le conseil municipal élit le maire."
+  },
+  {
+    "id": "Q141A",
+    "category": "Administration",
+    "title": "État civil",
+    "question": "Où peut-on demander un acte de naissance en France ?",
+    "options": [
+      "À la mairie",
+      "À la banque",
+      "Au supermarché",
+      "Au cinéma"
+    ],
+    "answer": "À la mairie",
+    "explanation": "La mairie gère l’état civil : naissances, mariages, décès."
+  },
+  {
+    "id": "Q142A",
+    "category": "Administration",
+    "title": "Département",
+    "question": "Quel élu préside le conseil départemental ?",
+    "options": [
+      "Le président du conseil départemental",
+      "Le maire",
+      "Le juge d’instruction",
+      "Le chef d’entreprise"
+    ],
+    "answer": "Le président du conseil départemental",
+    "explanation": "Le conseil départemental gère notamment des compétences sociales et territoriales."
+  },
+  {
+    "id": "Q143A",
+    "category": "Administration",
+    "title": "Région",
+    "question": "La région intervient notamment dans…",
+    "options": [
+      "Les lycées, les transports régionaux et le développement économique",
+      "Les passeports du monde entier",
+      "Les décisions pénales",
+      "La nomination du président"
+    ],
+    "answer": "Les lycées, les transports régionaux et le développement économique",
+    "explanation": "Les régions ont des compétences importantes dans les transports, les lycées et l’économie locale."
+  },
+  {
+    "id": "Q144A",
+    "category": "Administration",
+    "title": "Préfet",
+    "question": "Qui représente l’État dans le département ?",
+    "options": [
+      "Le préfet",
+      "Le maire uniquement",
+      "Le président d’association",
+      "Le directeur d’école"
+    ],
+    "answer": "Le préfet",
+    "explanation": "Le préfet représente l’État dans le département et veille à l’application des politiques publiques."
+  },
+  {
+    "id": "Q145A",
+    "category": "Administration",
+    "title": "Service public",
+    "question": "Qu’est-ce qu’un service public ?",
+    "options": [
+      "Une activité d’intérêt général assurée ou contrôlée par une personne publique",
+      "Une activité toujours privée",
+      "Une publicité",
+      "Une réunion familiale"
+    ],
+    "answer": "Une activité d’intérêt général assurée ou contrôlée par une personne publique",
+    "explanation": "Les services publics répondent à des besoins collectifs comme l’éducation, la sécurité ou la santé."
+  },
+  {
+    "id": "Q146A",
+    "category": "Administration",
+    "title": "CAF",
+    "question": "La CAF est principalement liée…",
+    "options": [
+      "Aux prestations familiales et sociales",
+      "À la justice pénale",
+      "À l’armée",
+      "À l’élection présidentielle"
+    ],
+    "answer": "Aux prestations familiales et sociales",
+    "explanation": "La CAF accompagne les familles et verse certaines prestations sociales."
+  },
+  {
+    "id": "Q147A",
+    "category": "Administration",
+    "title": "Sécurité sociale",
+    "question": "À quoi sert la Sécurité sociale ?",
+    "options": [
+      "À protéger contre certains risques sociaux",
+      "À organiser les élections",
+      "À gérer les frontières",
+      "À voter les lois"
+    ],
+    "answer": "À protéger contre certains risques sociaux",
+    "explanation": "La Sécurité sociale protège notamment en matière de santé, famille, retraite et accidents du travail."
+  },
+  {
+    "id": "Q148A",
+    "category": "Administration",
+    "title": "Carte d’identité",
+    "question": "Un document officiel d’identité peut être demandé pour…",
+    "options": [
+      "Prouver son identité",
+      "Remplacer le permis de conduire dans tous les cas",
+      "Voter sans être inscrit",
+      "Ne jamais respecter la loi"
+    ],
+    "answer": "Prouver son identité",
+    "explanation": "La carte d’identité ou le passeport permettent de justifier son identité."
+  },
+  {
+    "id": "Q149A",
+    "category": "Administration",
+    "title": "Préfecture",
+    "question": "La préfecture intervient notamment dans…",
+    "options": [
+      "Certaines démarches administratives de l’État",
+      "Les achats alimentaires",
+      "Les notes scolaires privées",
+      "La création de chansons"
+    ],
+    "answer": "Certaines démarches administratives de l’État",
+    "explanation": "La préfecture représente l’État et gère certaines démarches administratives selon les situations."
+  },
+  {
+    "id": "Q150A",
+    "category": "Administration",
+    "title": "Impôts",
+    "question": "L’administration fiscale s’occupe principalement…",
+    "options": [
+      "Des déclarations et paiements d’impôts",
+      "Des mariages",
+      "Des procès pénaux",
+      "Des matchs sportifs"
+    ],
+    "answer": "Des déclarations et paiements d’impôts",
+    "explanation": "L’administration fiscale collecte les impôts et accompagne les contribuables."
+  },
+  {
+    "id": "Q151A",
+    "category": "Administration",
+    "title": "État",
+    "question": "L’État français agit notamment par…",
+    "options": [
+      "Les ministères, les préfectures et les services publics",
+      "Les familles uniquement",
+      "Les entreprises étrangères uniquement",
+      "Les clubs sportifs uniquement"
+    ],
+    "answer": "Les ministères, les préfectures et les services publics",
+    "explanation": "L’État met en œuvre les politiques publiques par ses administrations."
+  },
+  {
+    "id": "Q152A",
+    "category": "Administration",
+    "title": "Décentralisation",
+    "question": "La décentralisation donne des compétences…",
+    "options": [
+      "Aux collectivités territoriales",
+      "Aux réseaux sociaux",
+      "À une seule entreprise",
+      "À des pays étrangers uniquement"
+    ],
+    "answer": "Aux collectivités territoriales",
+    "explanation": "La décentralisation transfère certaines compétences de l’État vers les communes, départements et régions."
+  },
+  {
+    "id": "Q153A",
+    "category": "Justice",
+    "title": "Indépendance justice",
+    "question": "Pourquoi la justice doit-elle être indépendante ?",
+    "options": [
+      "Pour juger impartialement",
+      "Pour obéir à chaque candidat",
+      "Pour remplacer la loi",
+      "Pour supprimer les droits"
+    ],
+    "answer": "Pour juger impartialement",
+    "explanation": "L’indépendance de la justice permet de protéger les droits et d’éviter l’arbitraire."
+  },
+  {
+    "id": "Q154A",
+    "category": "Justice",
+    "title": "Tribunal",
+    "question": "Quel est le rôle d’un tribunal ?",
+    "options": [
+      "Trancher des litiges et juger selon la loi",
+      "Voter les lois",
+      "Diriger la commune",
+      "Organiser les vacances"
+    ],
+    "answer": "Trancher des litiges et juger selon la loi",
+    "explanation": "Les tribunaux rendent la justice en appliquant la loi."
+  },
+  {
+    "id": "Q155A",
+    "category": "Justice",
+    "title": "Cour de cassation",
+    "question": "Quelle est la plus haute juridiction en matière civile et pénale ?",
+    "options": [
+      "La Cour de cassation",
+      "Le Conseil d’État",
+      "La mairie",
+      "Le Parlement européen"
+    ],
+    "answer": "La Cour de cassation",
+    "explanation": "La Cour de cassation contrôle la bonne application du droit en matière civile et pénale."
+  },
+  {
+    "id": "Q156A",
+    "category": "Justice",
+    "title": "Justice administrative",
+    "question": "Quelle juridiction juge les litiges avec l’administration ?",
+    "options": [
+      "La juridiction administrative",
+      "La juridiction sportive",
+      "La juridiction familiale uniquement",
+      "Une association privée"
+    ],
+    "answer": "La juridiction administrative",
+    "explanation": "La justice administrative traite notamment les litiges entre les citoyens et l’administration."
+  },
+  {
+    "id": "Q157A",
+    "category": "Justice",
+    "title": "Conseil d’État justice",
+    "question": "Quelle est la plus haute juridiction administrative ?",
+    "options": [
+      "Le Conseil d’État",
+      "La Cour de cassation",
+      "Le conseil municipal",
+      "Le rectorat"
+    ],
+    "answer": "Le Conseil d’État",
+    "explanation": "Le Conseil d’État est la plus haute juridiction administrative en France."
+  },
+  {
+    "id": "Q158A",
+    "category": "Justice",
+    "title": "Avocat",
+    "question": "Quel professionnel défend ou conseille juridiquement une personne ?",
+    "options": [
+      "L’avocat",
+      "Le préfet",
+      "Le député",
+      "Le facteur"
+    ],
+    "answer": "L’avocat",
+    "explanation": "L’avocat conseille, assiste et défend les personnes devant la justice."
+  },
+  {
+    "id": "Q159A",
+    "category": "Justice",
+    "title": "Police",
+    "question": "La police nationale dépend principalement…",
+    "options": [
+      "Du ministère de l’Intérieur",
+      "Du ministère de la Culture",
+      "De la mairie seulement",
+      "D’une entreprise privée"
+    ],
+    "answer": "Du ministère de l’Intérieur",
+    "explanation": "La police nationale contribue à la sécurité publique et dépend du ministère de l’Intérieur."
+  },
+  {
+    "id": "Q160A",
+    "category": "Justice",
+    "title": "Gendarmerie",
+    "question": "La gendarmerie est une force…",
+    "options": [
+      "Militaire chargée aussi de missions de sécurité intérieure",
+      "Scolaire",
+      "Commerciale",
+      "Religieuse"
+    ],
+    "answer": "Militaire chargée aussi de missions de sécurité intérieure",
+    "explanation": "La gendarmerie nationale assure des missions de sécurité, notamment dans de nombreux territoires."
+  },
+  {
+    "id": "Q161A",
+    "category": "Justice",
+    "title": "Plainte",
+    "question": "Que peut faire une victime d’infraction ?",
+    "options": [
+      "Déposer plainte",
+      "Se venger",
+      "Diffuser une accusation sans preuve",
+      "Remplacer le juge"
+    ],
+    "answer": "Déposer plainte",
+    "explanation": "Déposer plainte permet de signaler une infraction aux autorités compétentes."
+  },
+  {
+    "id": "Q162A",
+    "category": "Justice",
+    "title": "Infraction",
+    "question": "Une infraction est…",
+    "options": [
+      "Un comportement interdit par la loi",
+      "Une opinion autorisée",
+      "Une cérémonie officielle",
+      "Un vote blanc"
+    ],
+    "answer": "Un comportement interdit par la loi",
+    "explanation": "Une infraction peut être une contravention, un délit ou un crime selon sa gravité."
+  },
+  {
+    "id": "Q163A",
+    "category": "Justice",
+    "title": "Contravention",
+    "question": "La contravention correspond généralement…",
+    "options": [
+      "À l’infraction la moins grave",
+      "Au crime le plus grave",
+      "À une loi européenne",
+      "À une élection"
+    ],
+    "answer": "À l’infraction la moins grave",
+    "explanation": "Les contraventions sont des infractions moins graves que les délits et les crimes."
+  },
+  {
+    "id": "Q164A",
+    "category": "Justice",
+    "title": "Délit",
+    "question": "Un vol simple est souvent qualifié juridiquement de…",
+    "options": [
+      "Délit",
+      "Contrat",
+      "Élection",
+      "Circulaire"
+    ],
+    "answer": "Délit",
+    "explanation": "Un délit est une infraction d’une gravité intermédiaire, jugée par le tribunal correctionnel."
+  },
+  {
+    "id": "Q165A",
+    "category": "Justice",
+    "title": "Crime",
+    "question": "Un crime est jugé en principe par…",
+    "options": [
+      "La cour d’assises",
+      "Le conseil municipal",
+      "Le tribunal de commerce uniquement",
+      "La mairie"
+    ],
+    "answer": "La cour d’assises",
+    "explanation": "Les crimes, infractions les plus graves, sont jugés par la cour d’assises."
+  },
+  {
+    "id": "Q166A",
+    "category": "Justice",
+    "title": "Sanction",
+    "question": "Une sanction pénale doit être décidée par…",
+    "options": [
+      "Une autorité judiciaire compétente",
+      "Un voisin",
+      "Un réseau social",
+      "Un employeur dans tous les cas"
+    ],
+    "answer": "Une autorité judiciaire compétente",
+    "explanation": "La sanction pénale relève de la justice et doit respecter la procédure légale."
+  },
+  {
+    "id": "Q167A",
+    "category": "Justice",
+    "title": "État de droit",
+    "question": "Dans un État de droit, l’État est…",
+    "options": [
+      "Soumis au droit",
+      "Au-dessus des lois",
+      "Libre d’agir sans contrôle",
+      "Remplacé par les entreprises"
+    ],
+    "answer": "Soumis au droit",
+    "explanation": "L’État de droit signifie que les pouvoirs publics doivent respecter la loi."
+  },
+  {
+    "id": "Q168A",
+    "category": "Éducation",
+    "title": "Instruction",
+    "question": "En France, l’instruction est obligatoire de…",
+    "options": [
+      "3 à 16 ans",
+      "6 à 12 ans",
+      "10 à 18 ans",
+      "18 à 25 ans"
+    ],
+    "answer": "3 à 16 ans",
+    "explanation": "L’instruction est obligatoire de 3 à 16 ans en France."
+  },
+  {
+    "id": "Q169A",
+    "category": "Éducation",
+    "title": "École publique",
+    "question": "L’école publique française est en principe…",
+    "options": [
+      "Gratuite, laïque et obligatoire",
+      "Payante pour tous",
+      "Réservée à une religion",
+      "Interdite aux filles"
+    ],
+    "answer": "Gratuite, laïque et obligatoire",
+    "explanation": "L’école publique repose sur la gratuité, la laïcité et l’obligation d’instruction."
+  },
+  {
+    "id": "Q170A",
+    "category": "Éducation",
+    "title": "Rectorat",
+    "question": "Le rectorat est lié principalement…",
+    "options": [
+      "À l’administration de l’Éducation nationale",
+      "À la police judiciaire",
+      "Aux impôts locaux",
+      "Aux élections municipales"
+    ],
+    "answer": "À l’administration de l’Éducation nationale",
+    "explanation": "Le rectorat représente l’Éducation nationale dans une académie."
+  },
+  {
+    "id": "Q171A",
+    "category": "Éducation",
+    "title": "Diplôme",
+    "question": "Un diplôme sert notamment à…",
+    "options": [
+      "Attester un niveau ou une qualification",
+      "Remplacer une carte d’identité",
+      "Voter automatiquement",
+      "Supprimer les devoirs citoyens"
+    ],
+    "answer": "Attester un niveau ou une qualification",
+    "explanation": "Un diplôme certifie des connaissances ou compétences acquises."
+  },
+  {
+    "id": "Q172A",
+    "category": "Travail",
+    "title": "Contrat",
+    "question": "Quel document encadre généralement une relation de travail salariée ?",
+    "options": [
+      "Le contrat de travail",
+      "Le bulletin météo",
+      "La carte électorale",
+      "Le passeport"
+    ],
+    "answer": "Le contrat de travail",
+    "explanation": "Le contrat de travail précise les droits et obligations du salarié et de l’employeur."
+  },
+  {
+    "id": "Q173A",
+    "category": "Travail",
+    "title": "CDI",
+    "question": "Que signifie CDI ?",
+    "options": [
+      "Contrat à durée indéterminée",
+      "Contrat de devoir immédiat",
+      "Carte de domicile interne",
+      "Centre de décision institutionnel"
+    ],
+    "answer": "Contrat à durée indéterminée",
+    "explanation": "Le CDI est un contrat sans date de fin prévue."
+  },
+  {
+    "id": "Q174A",
+    "category": "Travail",
+    "title": "CDD",
+    "question": "Que signifie CDD ?",
+    "options": [
+      "Contrat à durée déterminée",
+      "Carte de défense durable",
+      "Code de droit direct",
+      "Contrat de départ définitif"
+    ],
+    "answer": "Contrat à durée déterminée",
+    "explanation": "Le CDD est un contrat avec une durée ou un terme prévu."
+  },
+  {
+    "id": "Q175A",
+    "category": "Travail",
+    "title": "SMIC",
+    "question": "Le SMIC désigne…",
+    "options": [
+      "Le salaire minimum légal",
+      "Une élection locale",
+      "Une juridiction",
+      "Un impôt régional"
+    ],
+    "answer": "Le salaire minimum légal",
+    "explanation": "Le SMIC fixe un niveau minimum de rémunération horaire pour les salariés concernés."
+  },
+  {
+    "id": "Q176A",
+    "category": "Travail",
+    "title": "Code du travail",
+    "question": "Quel texte encadre une grande partie des relations de travail ?",
+    "options": [
+      "Le Code du travail",
+      "Le Code de la route uniquement",
+      "Le Code civil uniquement",
+      "Le règlement d’une association"
+    ],
+    "answer": "Le Code du travail",
+    "explanation": "Le Code du travail rassemble de nombreuses règles relatives au travail salarié."
+  },
+  {
+    "id": "Q177A",
+    "category": "Travail",
+    "title": "Inspection du travail",
+    "question": "Quel service contrôle notamment l’application du droit du travail ?",
+    "options": [
+      "L’inspection du travail",
+      "La mairie uniquement",
+      "Le musée national",
+      "Le Parlement européen"
+    ],
+    "answer": "L’inspection du travail",
+    "explanation": "L’inspection du travail informe et contrôle l’application de la législation du travail."
+  },
+  {
+    "id": "Q178A",
+    "category": "Social",
+    "title": "Assurance maladie",
+    "question": "L’Assurance maladie sert principalement à…",
+    "options": [
+      "Prendre en charge une partie des dépenses de santé",
+      "Organiser les élections",
+      "Créer les lois",
+      "Gérer les diplômes"
+    ],
+    "answer": "Prendre en charge une partie des dépenses de santé",
+    "explanation": "L’Assurance maladie rembourse ou prend en charge une partie des soins selon les règles applicables."
+  },
+  {
+    "id": "Q179A",
+    "category": "Social",
+    "title": "Retraite",
+    "question": "Le système de retraite sert principalement à…",
+    "options": [
+      "Assurer un revenu après la vie professionnelle",
+      "Remplacer l’école",
+      "Organiser les référendums",
+      "Élire le maire"
+    ],
+    "answer": "Assurer un revenu après la vie professionnelle",
+    "explanation": "La retraite permet de percevoir un revenu après la carrière professionnelle, selon les droits acquis."
+  },
+  {
+    "id": "Q180A",
+    "category": "Social",
+    "title": "Chômage",
+    "question": "L’assurance chômage vise notamment à…",
+    "options": [
+      "Soutenir temporairement les personnes privées d’emploi",
+      "Supprimer le travail",
+      "Interdire les candidatures",
+      "Remplacer le salaire à vie sans conditions"
+    ],
+    "answer": "Soutenir temporairement les personnes privées d’emploi",
+    "explanation": "L’assurance chômage protège les travailleurs privés d’emploi selon des conditions définies."
+  },
+  {
+    "id": "Q181A",
+    "category": "Social",
+    "title": "Handicap",
+    "question": "La République doit favoriser l’inclusion des personnes…",
+    "options": [
+      "En situation de handicap",
+      "Uniquement riches",
+      "Uniquement majeures",
+      "Uniquement élues"
+    ],
+    "answer": "En situation de handicap",
+    "explanation": "L’inclusion vise l’égalité des droits, l’accessibilité et la participation de tous à la vie sociale."
+  },
+  {
+    "id": "Q182A",
+    "category": "Social",
+    "title": "Santé publique",
+    "question": "La santé publique concerne…",
+    "options": [
+      "La protection de la santé de la population",
+      "Les campagnes électorales uniquement",
+      "Le commerce privé uniquement",
+      "Les matchs sportifs seulement"
+    ],
+    "answer": "La protection de la santé de la population",
+    "explanation": "La santé publique agit sur la prévention, les soins, la sécurité sanitaire et l’accès à la santé."
+  },
+  {
+    "id": "Q183A",
+    "category": "Vie citoyenne",
+    "title": "Langue officielle",
+    "question": "Quelle est la langue officielle de la République française ?",
+    "options": [
+      "Le français",
+      "L’anglais",
+      "Le latin",
+      "Aucune langue officielle"
+    ],
+    "answer": "Le français",
+    "explanation": "La Constitution indique que la langue de la République est le français."
+  },
+  {
+    "id": "Q184A",
+    "category": "Vie citoyenne",
+    "title": "Politesse",
+    "question": "Dans une démarche administrative, il est important de…",
+    "options": [
+      "Fournir des informations exactes et respecter les agents",
+      "Mentir pour aller plus vite",
+      "Insulter l’agent",
+      "Donner de faux documents"
+    ],
+    "answer": "Fournir des informations exactes et respecter les agents",
+    "explanation": "Les démarches administratives reposent sur la sincérité des informations et le respect mutuel."
+  },
+  {
+    "id": "Q185A",
+    "category": "Vie citoyenne",
+    "title": "Document officiel",
+    "question": "Fournir un faux document à une administration est…",
+    "options": [
+      "Interdit",
+      "Recommandé",
+      "Obligatoire",
+      "Sans conséquence"
+    ],
+    "answer": "Interdit",
+    "explanation": "L’usage de faux documents est interdit et peut entraîner des sanctions."
+  },
+  {
+    "id": "Q186A",
+    "category": "Vie citoyenne",
+    "title": "Mariage civil",
+    "question": "En France, le mariage civil est célébré…",
+    "options": [
+      "À la mairie",
+      "Uniquement dans un lieu religieux",
+      "Dans une banque",
+      "Dans un tribunal européen"
+    ],
+    "answer": "À la mairie",
+    "explanation": "Le mariage civil est célébré par un officier d’état civil, généralement à la mairie."
+  },
+  {
+    "id": "Q187A",
+    "category": "Vie citoyenne",
+    "title": "Naissance",
+    "question": "Une naissance doit être déclarée…",
+    "options": [
+      "À l’état civil",
+      "Au Parlement",
+      "À la banque",
+      "Au cinéma"
+    ],
+    "answer": "À l’état civil",
+    "explanation": "La déclaration de naissance permet d’établir l’acte de naissance à l’état civil."
+  },
+  {
+    "id": "Q188A",
+    "category": "Vie citoyenne",
+    "title": "Respect égalité",
+    "question": "Dans la vie quotidienne, l’égalité implique notamment…",
+    "options": [
+      "Refuser les discriminations",
+      "Favoriser toujours ses proches",
+      "Classer les personnes par origine",
+      "Refuser les droits d’autrui"
+    ],
+    "answer": "Refuser les discriminations",
+    "explanation": "L’égalité se traduit aussi par des comportements de respect dans la vie quotidienne."
+  },
+  {
+    "id": "Q189A",
+    "category": "Vie citoyenne",
+    "title": "Parent",
+    "question": "Les parents ont notamment la responsabilité…",
+    "options": [
+      "De protéger et éduquer leurs enfants",
+      "De refuser l’instruction",
+      "De supprimer les droits de l’enfant",
+      "De remplacer la justice"
+    ],
+    "answer": "De protéger et éduquer leurs enfants",
+    "explanation": "Les parents ont des droits et devoirs liés à l’éducation, la santé et la protection de leurs enfants."
+  },
+  {
+    "id": "Q190A",
+    "category": "Vie citoyenne",
+    "title": "Violences familiales",
+    "question": "Les violences dans la famille sont…",
+    "options": [
+      "Interdites et punies par la loi",
+      "Autorisé si c’est privé",
+      "Toujours tolérées",
+      "Sans rapport avec la justice"
+    ],
+    "answer": "Interdites et punies par la loi",
+    "explanation": "Les violences conjugales ou familiales sont interdites. La vie privée ne justifie pas la violence."
+  },
+  {
+    "id": "Q191A",
+    "category": "Vie citoyenne",
+    "title": "Numéros urgence",
+    "question": "En cas d’urgence grave, il faut contacter…",
+    "options": [
+      "Les services d’urgence",
+      "Uniquement les réseaux sociaux",
+      "Un voisin avant tout dans tous les cas",
+      "Une publicité"
+    ],
+    "answer": "Les services d’urgence",
+    "explanation": "Les services d’urgence doivent être contactés en cas de danger grave ou immédiat."
+  },
+  {
+    "id": "Q192A",
+    "category": "Vie citoyenne",
+    "title": "Association",
+    "question": "Créer une association permet souvent…",
+    "options": [
+      "De porter un projet collectif",
+      "De remplacer un tribunal",
+      "De supprimer les impôts",
+      "D’élire le président"
+    ],
+    "answer": "De porter un projet collectif",
+    "explanation": "Les associations permettent aux citoyens de s’engager dans des projets sociaux, culturels, sportifs ou solidaires."
+  },
+  {
+    "id": "Q193A",
+    "category": "Vie citoyenne",
+    "title": "Bénévolat",
+    "question": "Le bénévolat correspond à…",
+    "options": [
+      "Un engagement volontaire sans rémunération",
+      "Un emploi illégal",
+      "Une peine judiciaire",
+      "Un vote obligatoire"
+    ],
+    "answer": "Un engagement volontaire sans rémunération",
+    "explanation": "Le bénévolat permet de contribuer à des actions collectives sans être salarié."
+  },
+  {
+    "id": "Q194A",
+    "category": "Vie citoyenne",
+    "title": "Médias",
+    "question": "Avant de partager une information, il vaut mieux…",
+    "options": [
+      "Vérifier sa source",
+      "Partager immédiatement",
+      "Modifier les faits",
+      "Ajouter une rumeur"
+    ],
+    "answer": "Vérifier sa source",
+    "explanation": "Vérifier les sources limite la diffusion de fausses informations."
+  },
+  {
+    "id": "Q195A",
+    "category": "Vie citoyenne",
+    "title": "Données personnelles",
+    "question": "Les données personnelles doivent être utilisées…",
+    "options": [
+      "Dans le respect des règles de protection",
+      "Sans limite",
+      "Sans informer personne",
+      "Uniquement pour nuire"
+    ],
+    "answer": "Dans le respect des règles de protection",
+    "explanation": "Les données personnelles sont protégées par des règles visant à respecter la vie privée."
+  },
+  {
+    "id": "Q196A",
+    "category": "Vie citoyenne",
+    "title": "Civilité",
+    "question": "Une civilité républicaine consiste notamment à…",
+    "options": [
+      "Respecter les personnes même en désaccord",
+      "Humilier publiquement",
+      "Menacer les opposants",
+      "Refuser tout débat"
+    ],
+    "answer": "Respecter les personnes même en désaccord",
+    "explanation": "Le débat démocratique suppose la possibilité d’être en désaccord sans violence ni haine."
+  },
+  {
+    "id": "Q197A",
+    "category": "Vie citoyenne",
+    "title": "Intégration",
+    "question": "S’intégrer dans une société, c’est notamment…",
+    "options": [
+      "Comprendre ses règles communes et y participer",
+      "Refuser toutes les règles",
+      "Vivre sans aucun contact",
+      "Remplacer les institutions"
+    ],
+    "answer": "Comprendre ses règles communes et y participer",
+    "explanation": "L’intégration passe par la connaissance de la langue, des droits, des devoirs et des valeurs communes."
+  },
+  {
+    "id": "Q001B",
+    "category": "Symboles et valeurs",
+    "title": "Devise",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Devise ?",
+    "options": [
+      "Liberté, égalité, fraternité",
+      "Travail, famille, patrie",
+      "Unité, discipline, progrès",
+      "Foi, loi, roi"
+    ],
+    "answer": "Liberté, égalité, fraternité",
+    "explanation": "La devise officielle de la République française est « Liberté, égalité, fraternité ». Elle exprime trois valeurs centrales de la vie républicaine."
+  },
+  {
+    "id": "Q002B",
+    "category": "Symboles et valeurs",
+    "title": "Drapeau",
+    "question": "AC pose une question rapide sur « Drapeau ». Quelle est la bonne réponse ?",
+    "options": [
+      "Bleu, blanc, rouge",
+      "Vert, blanc, rouge",
+      "Bleu, jaune, rouge",
+      "Noir, blanc, rouge"
+    ],
+    "answer": "Bleu, blanc, rouge",
+    "explanation": "Le drapeau tricolore français est bleu, blanc et rouge. C’est l’un des symboles de la République."
+  },
+  {
+    "id": "Q003B",
+    "category": "Symboles et valeurs",
+    "title": "Hymne national",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Hymne national ?",
+    "options": [
+      "La Marseillaise",
+      "Le Chant des partisans",
+      "La Parisienne",
+      "L’Ode à la joie"
+    ],
+    "answer": "La Marseillaise",
+    "explanation": "La Marseillaise est l’hymne national français. Elle est chantée lors des cérémonies officielles et événements nationaux."
+  },
+  {
+    "id": "Q004B",
+    "category": "Symboles et valeurs",
+    "title": "Marianne",
+    "question": "AC pose une question rapide sur « Marianne ». Quelle est la bonne réponse ?",
+    "options": [
+      "La République française",
+      "La monarchie française",
+      "L’Union européenne",
+      "L’armée française"
+    ],
+    "answer": "La République française",
+    "explanation": "Marianne est une figure symbolique de la République française. On la retrouve notamment dans les mairies et sur certains timbres."
+  },
+  {
+    "id": "Q005B",
+    "category": "Symboles et valeurs",
+    "title": "14 juillet",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : 14 juillet ?",
+    "options": [
+      "La République et l’unité nationale",
+      "La fin de l’école",
+      "La fête du travail",
+      "La création de l’euro"
+    ],
+    "answer": "La République et l’unité nationale",
+    "explanation": "Le 14 juillet est la fête nationale française. Il rappelle la Révolution française et la Fête de la Fédération."
+  },
+  {
+    "id": "Q006B",
+    "category": "Symboles et valeurs",
+    "title": "Liberté",
+    "question": "AC pose une question rapide sur « Liberté ». Quelle est la bonne réponse ?",
+    "options": [
+      "Pouvoir agir dans le respect de la loi et des autres",
+      "Faire tout ce que l’on veut sans limite",
+      "Refuser toutes les règles",
+      "Obéir uniquement à sa famille"
+    ],
+    "answer": "Pouvoir agir dans le respect de la loi et des autres",
+    "explanation": "La liberté n’est pas l’absence totale de règles : elle s’exerce dans le cadre de la loi et du respect d’autrui."
+  },
+  {
+    "id": "Q007B",
+    "category": "Symboles et valeurs",
+    "title": "Égalité",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Égalité ?",
+    "options": [
+      "Les citoyens sont égaux devant la loi",
+      "Tout le monde a exactement le même salaire",
+      "Les élus sont au-dessus des lois",
+      "La loi dépend de la religion"
+    ],
+    "answer": "Les citoyens sont égaux devant la loi",
+    "explanation": "L’égalité républicaine signifie notamment que la loi s’applique à tous de manière égale."
+  },
+  {
+    "id": "Q008B",
+    "category": "Symboles et valeurs",
+    "title": "Fraternité",
+    "question": "AC pose une question rapide sur « Fraternité ». Quelle est la bonne réponse ?",
+    "options": [
+      "La solidarité entre les citoyens",
+      "L’obligation d’être de la même famille",
+      "La priorité donnée aux plus riches",
+      "Le refus de l’entraide"
+    ],
+    "answer": "La solidarité entre les citoyens",
+    "explanation": "La fraternité renvoie à l’entraide, à la solidarité et au respect entre les personnes."
+  },
+  {
+    "id": "Q009B",
+    "category": "Symboles et valeurs",
+    "title": "Coq",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Coq ?",
+    "options": [
+      "Le coq",
+      "L’aigle",
+      "Le lion",
+      "Le taureau"
+    ],
+    "answer": "Le coq",
+    "explanation": "Le coq est un symbole populaire associé à la France, notamment dans le sport et certaines représentations nationales."
+  },
+  {
+    "id": "Q010B",
+    "category": "Symboles et valeurs",
+    "title": "République",
+    "question": "AC pose une question rapide sur « République ». Quelle est la bonne réponse ?",
+    "options": [
+      "Le pouvoir appartient au peuple par ses représentants et ses institutions",
+      "Le pouvoir appartient à un roi",
+      "Le pouvoir appartient à une seule famille",
+      "Le pouvoir dépend d’une religion officielle"
+    ],
+    "answer": "Le pouvoir appartient au peuple par ses représentants et ses institutions",
+    "explanation": "Une République repose sur des institutions publiques, des lois communes et la souveraineté du peuple."
+  },
+  {
+    "id": "Q011B",
+    "category": "Symboles et valeurs",
+    "title": "Valeurs",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Valeurs ?",
+    "options": [
+      "La dignité de la personne humaine",
+      "La supériorité d’un groupe",
+      "L’arbitraire",
+      "L’inégalité devant la loi"
+    ],
+    "answer": "La dignité de la personne humaine",
+    "explanation": "La République reconnaît la dignité de chaque personne et combat les discriminations."
+  },
+  {
+    "id": "Q012B",
+    "category": "Symboles et valeurs",
+    "title": "Citoyenneté",
+    "question": "AC pose une question rapide sur « Citoyenneté ». Quelle est la bonne réponse ?",
+    "options": [
+      "Avoir des droits et des devoirs",
+      "Avoir seulement des droits",
+      "Ne jamais respecter la loi",
+      "Refuser toute participation à la société"
+    ],
+    "answer": "Avoir des droits et des devoirs",
+    "explanation": "La citoyenneté associe droits, libertés, devoirs et participation à la vie collective."
+  },
+  {
+    "id": "Q013B",
+    "category": "Symboles et valeurs",
+    "title": "Nation",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Nation ?",
+    "options": [
+      "Une communauté de citoyens partageant des valeurs communes",
+      "Une seule origine familiale",
+      "Une seule religion",
+      "Une seule profession"
+    ],
+    "answer": "Une communauté de citoyens partageant des valeurs communes",
+    "explanation": "La nation française se construit autour de citoyens, d’institutions, de valeurs et d’une histoire commune."
+  },
+  {
+    "id": "Q014B",
+    "category": "Symboles et valeurs",
+    "title": "Bleu blanc rouge",
+    "question": "AC pose une question rapide sur « Bleu blanc rouge ». Quelle est la bonne réponse ?",
+    "options": [
+      "Sur les bâtiments publics",
+      "Uniquement dans les stades",
+      "Uniquement dans les commerces",
+      "Uniquement chez les particuliers"
+    ],
+    "answer": "Sur les bâtiments publics",
+    "explanation": "Le drapeau français est présent sur de nombreux bâtiments publics et lors des cérémonies officielles."
+  },
+  {
+    "id": "Q015B",
+    "category": "Symboles et valeurs",
+    "title": "Cérémonies",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Cérémonies ?",
+    "options": [
+      "La Marseillaise",
+      "Une chanson publicitaire",
+      "Un chant privé obligatoire",
+      "Un hymne régional uniquement"
+    ],
+    "answer": "La Marseillaise",
+    "explanation": "La Marseillaise est l’hymne national et peut être chantée lors de cérémonies officielles."
+  },
+  {
+    "id": "Q016B",
+    "category": "Institutions",
+    "title": "Chef de l’État",
+    "question": "AC pose une question rapide sur « Chef de l’État ». Quelle est la bonne réponse ?",
+    "options": [
+      "Le président de la République",
+      "Le maire",
+      "Le président du Sénat",
+      "Le préfet"
+    ],
+    "answer": "Le président de la République",
+    "explanation": "Le président de la République est le chef de l’État. Il représente la France et veille au fonctionnement des institutions."
+  },
+  {
+    "id": "Q017B",
+    "category": "Institutions",
+    "title": "Premier ministre",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Premier ministre ?",
+    "options": [
+      "Le Premier ministre",
+      "Le maire",
+      "Le président du Conseil constitutionnel",
+      "Le président du Sénat"
+    ],
+    "answer": "Le Premier ministre",
+    "explanation": "Le Premier ministre dirige l’action du gouvernement et coordonne le travail des ministres."
+  },
+  {
+    "id": "Q018B",
+    "category": "Institutions",
+    "title": "Nomination PM",
+    "question": "AC pose une question rapide sur « Nomination PM ». Quelle est la bonne réponse ?",
+    "options": [
+      "Le président de la République",
+      "Le maire de Paris",
+      "Le Sénat",
+      "Le Conseil d’État"
+    ],
+    "answer": "Le président de la République",
+    "explanation": "Le président de la République nomme le Premier ministre."
+  },
+  {
+    "id": "Q019B",
+    "category": "Institutions",
+    "title": "Parlement",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Parlement ?",
+    "options": [
+      "L’Assemblée nationale et le Sénat",
+      "La mairie et la préfecture",
+      "Le tribunal et la police",
+      "La région et la commune"
+    ],
+    "answer": "L’Assemblée nationale et le Sénat",
+    "explanation": "Le Parlement français est composé de deux chambres : l’Assemblée nationale et le Sénat."
+  },
+  {
+    "id": "Q020B",
+    "category": "Institutions",
+    "title": "Assemblée nationale",
+    "question": "AC pose une question rapide sur « Assemblée nationale ». Quelle est la bonne réponse ?",
+    "options": [
+      "Les députés",
+      "Les maires",
+      "Les préfets",
+      "Les juges"
+    ],
+    "answer": "Les députés",
+    "explanation": "Les députés sont élus pour représenter les citoyens à l’Assemblée nationale."
+  },
+  {
+    "id": "Q021B",
+    "category": "Institutions",
+    "title": "Sénat",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Sénat ?",
+    "options": [
+      "Les sénateurs",
+      "Les ministres",
+      "Les policiers",
+      "Les conseillers municipaux uniquement"
+    ],
+    "answer": "Les sénateurs",
+    "explanation": "Le Sénat est composé de sénateurs. Il participe au vote des lois et représente les collectivités territoriales."
+  },
+  {
+    "id": "Q022B",
+    "category": "Institutions",
+    "title": "Vote des lois",
+    "question": "AC pose une question rapide sur « Vote des lois ». Quelle est la bonne réponse ?",
+    "options": [
+      "Voter la loi et contrôler le gouvernement",
+      "Rendre les jugements",
+      "Commander l’armée directement",
+      "Nommer les maires"
+    ],
+    "answer": "Voter la loi et contrôler le gouvernement",
+    "explanation": "Le Parlement vote les lois et contrôle l’action du gouvernement."
+  },
+  {
+    "id": "Q023B",
+    "category": "Institutions",
+    "title": "Gouvernement",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Gouvernement ?",
+    "options": [
+      "Du Premier ministre et des ministres",
+      "Des juges et des avocats",
+      "Des maires uniquement",
+      "Des électeurs tirés au sort uniquement"
+    ],
+    "answer": "Du Premier ministre et des ministres",
+    "explanation": "Le gouvernement comprend le Premier ministre, les ministres et parfois des secrétaires d’État."
+  },
+  {
+    "id": "Q024B",
+    "category": "Institutions",
+    "title": "Ministre",
+    "question": "AC pose une question rapide sur « Ministre ». Quelle est la bonne réponse ?",
+    "options": [
+      "Diriger un domaine de l’action publique",
+      "Juger les citoyens",
+      "Élire le président",
+      "Créer seul la Constitution"
+    ],
+    "answer": "Diriger un domaine de l’action publique",
+    "explanation": "Un ministre est responsable d’un domaine comme l’éducation, la santé, l’intérieur ou l’économie."
+  },
+  {
+    "id": "Q025B",
+    "category": "Institutions",
+    "title": "Conseil des ministres",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Conseil des ministres ?",
+    "options": [
+      "Le président de la République",
+      "Le maire",
+      "Le préfet",
+      "Le président d’une association"
+    ],
+    "answer": "Le président de la République",
+    "explanation": "Le Conseil des ministres réunit le président de la République, le Premier ministre et les ministres."
+  },
+  {
+    "id": "Q026B",
+    "category": "Institutions",
+    "title": "Constitution",
+    "question": "AC pose une question rapide sur « Constitution ». Quelle est la bonne réponse ?",
+    "options": [
+      "La Constitution",
+      "Le règlement d’une mairie",
+      "Un contrat de travail",
+      "Un programme électoral"
+    ],
+    "answer": "La Constitution",
+    "explanation": "La Constitution fixe l’organisation des pouvoirs publics et les grands principes de la République."
+  },
+  {
+    "id": "Q027B",
+    "category": "Institutions",
+    "title": "Ve République",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Ve République ?",
+    "options": [
+      "La Ve République",
+      "La IIIe République",
+      "La IVe République",
+      "La Ire République"
+    ],
+    "answer": "La Ve République",
+    "explanation": "La France vit sous la Ve République, instaurée en 1958."
+  },
+  {
+    "id": "Q028B",
+    "category": "Institutions",
+    "title": "1958",
+    "question": "AC pose une question rapide sur « 1958 ». Quelle est la bonne réponse ?",
+    "options": [
+      "1958",
+      "1789",
+      "1848",
+      "1968"
+    ],
+    "answer": "1958",
+    "explanation": "La Ve République a été instaurée en 1958, avec une nouvelle Constitution."
+  },
+  {
+    "id": "Q029B",
+    "category": "Institutions",
+    "title": "Pouvoir exécutif",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Pouvoir exécutif ?",
+    "options": [
+      "Le président de la République et le gouvernement",
+      "Les tribunaux uniquement",
+      "Les associations uniquement",
+      "Les entreprises privées"
+    ],
+    "answer": "Le président de la République et le gouvernement",
+    "explanation": "Le pouvoir exécutif met en œuvre les lois et conduit la politique de la nation."
+  },
+  {
+    "id": "Q030B",
+    "category": "Institutions",
+    "title": "Pouvoir législatif",
+    "question": "AC pose une question rapide sur « Pouvoir législatif ». Quelle est la bonne réponse ?",
+    "options": [
+      "Le Parlement",
+      "La police",
+      "Les préfectures",
+      "Les banques"
+    ],
+    "answer": "Le Parlement",
+    "explanation": "Le pouvoir législatif consiste à discuter et voter les lois. Il est exercé par le Parlement."
+  },
+  {
+    "id": "Q031B",
+    "category": "Institutions",
+    "title": "Pouvoir judiciaire",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Pouvoir judiciaire ?",
+    "options": [
+      "Le pouvoir judiciaire",
+      "Le pouvoir commercial",
+      "Le pouvoir médiatique",
+      "Le pouvoir sportif"
+    ],
+    "answer": "Le pouvoir judiciaire",
+    "explanation": "La justice tranche les litiges et sanctionne les infractions dans le respect de la loi."
+  },
+  {
+    "id": "Q032B",
+    "category": "Institutions",
+    "title": "Séparation pouvoirs",
+    "question": "AC pose une question rapide sur « Séparation pouvoirs ». Quelle est la bonne réponse ?",
+    "options": [
+      "Pour éviter la concentration du pouvoir",
+      "Pour supprimer les élections",
+      "Pour donner tout le pouvoir au gouvernement",
+      "Pour remplacer la Constitution"
+    ],
+    "answer": "Pour éviter la concentration du pouvoir",
+    "explanation": "La séparation des pouvoirs protège la démocratie en limitant les abus."
+  },
+  {
+    "id": "Q033B",
+    "category": "Institutions",
+    "title": "Conseil constitutionnel",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Conseil constitutionnel ?",
+    "options": [
+      "Le Conseil constitutionnel",
+      "La mairie",
+      "La Sécurité sociale",
+      "La Banque de France uniquement"
+    ],
+    "answer": "Le Conseil constitutionnel",
+    "explanation": "Le Conseil constitutionnel vérifie que certaines lois respectent la Constitution."
+  },
+  {
+    "id": "Q034B",
+    "category": "Institutions",
+    "title": "Conseil d’État",
+    "question": "AC pose une question rapide sur « Conseil d’État ». Quelle est la bonne réponse ?",
+    "options": [
+      "Conseiller le gouvernement et juger certains litiges administratifs",
+      "Organiser les matchs nationaux",
+      "Diriger les écoles privées",
+      "Élire les députés"
+    ],
+    "answer": "Conseiller le gouvernement et juger certains litiges administratifs",
+    "explanation": "Le Conseil d’État conseille le gouvernement et est aussi la plus haute juridiction administrative."
+  },
+  {
+    "id": "Q035B",
+    "category": "Institutions",
+    "title": "Journal officiel",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Journal officiel ?",
+    "options": [
+      "Au Journal officiel",
+      "Dans les réseaux sociaux",
+      "Dans une publicité",
+      "Dans un journal local uniquement"
+    ],
+    "answer": "Au Journal officiel",
+    "explanation": "La publication au Journal officiel permet de rendre les textes officiels accessibles et applicables."
+  },
+  {
+    "id": "Q036B",
+    "category": "Élections",
+    "title": "Droit de vote",
+    "question": "AC pose une question rapide sur « Droit de vote ». Quelle est la bonne réponse ?",
+    "options": [
+      "18 ans",
+      "16 ans",
+      "21 ans",
+      "25 ans"
+    ],
+    "answer": "18 ans",
+    "explanation": "Le droit de vote est accordé aux citoyens français majeurs, donc à partir de 18 ans."
+  },
+  {
+    "id": "Q037B",
+    "category": "Élections",
+    "title": "Suffrage universel",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Suffrage universel ?",
+    "options": [
+      "Tous les citoyens remplissant les conditions peuvent voter",
+      "Seuls les riches votent",
+      "Seuls les élus votent",
+      "Seuls les fonctionnaires votent"
+    ],
+    "answer": "Tous les citoyens remplissant les conditions peuvent voter",
+    "explanation": "Le suffrage universel signifie que le droit de vote n’est pas réservé à une catégorie sociale."
+  },
+  {
+    "id": "Q038B",
+    "category": "Élections",
+    "title": "Vote secret",
+    "question": "AC pose une question rapide sur « Vote secret ». Quelle est la bonne réponse ?",
+    "options": [
+      "Pour permettre à chacun de voter librement",
+      "Pour cacher les résultats",
+      "Pour empêcher les citoyens de voter",
+      "Pour supprimer le dépouillement"
+    ],
+    "answer": "Pour permettre à chacun de voter librement",
+    "explanation": "Le secret du vote protège la liberté de choix de chaque électeur."
+  },
+  {
+    "id": "Q039B",
+    "category": "Élections",
+    "title": "Isoloir",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Isoloir ?",
+    "options": [
+      "À garantir le secret du vote",
+      "À compter les bulletins",
+      "À remplacer la carte d’identité",
+      "À annoncer les résultats"
+    ],
+    "answer": "À garantir le secret du vote",
+    "explanation": "L’isoloir permet à l’électeur de choisir son bulletin sans pression extérieure."
+  },
+  {
+    "id": "Q040B",
+    "category": "Élections",
+    "title": "Urne",
+    "question": "AC pose une question rapide sur « Urne ». Quelle est la bonne réponse ?",
+    "options": [
+      "Dans l’urne",
+      "Dans une boîte privée",
+      "Dans un registre médical",
+      "Dans un portefeuille"
+    ],
+    "answer": "Dans l’urne",
+    "explanation": "Le bulletin est déposé dans l’urne après vérification de l’identité de l’électeur."
+  },
+  {
+    "id": "Q041B",
+    "category": "Élections",
+    "title": "Présidentielle",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Présidentielle ?",
+    "options": [
+      "L’élection présidentielle",
+      "L’élection municipale",
+      "L’élection syndicale",
+      "L’élection scolaire"
+    ],
+    "answer": "L’élection présidentielle",
+    "explanation": "Le président de la République est élu lors de l’élection présidentielle."
+  },
+  {
+    "id": "Q042B",
+    "category": "Élections",
+    "title": "Mandat présidentiel",
+    "question": "AC pose une question rapide sur « Mandat présidentiel ». Quelle est la bonne réponse ?",
+    "options": [
+      "5 ans",
+      "4 ans",
+      "6 ans",
+      "7 ans"
+    ],
+    "answer": "5 ans",
+    "explanation": "Depuis l’instauration du quinquennat, le mandat présidentiel dure 5 ans."
+  },
+  {
+    "id": "Q043B",
+    "category": "Élections",
+    "title": "Législatives",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Législatives ?",
+    "options": [
+      "Les élections législatives",
+      "Les élections municipales",
+      "Les élections prud’homales",
+      "Les élections européennes uniquement"
+    ],
+    "answer": "Les élections législatives",
+    "explanation": "Les élections législatives permettent d’élire les députés à l’Assemblée nationale."
+  },
+  {
+    "id": "Q044B",
+    "category": "Élections",
+    "title": "Municipales",
+    "question": "AC pose une question rapide sur « Municipales ». Quelle est la bonne réponse ?",
+    "options": [
+      "Les élections municipales",
+      "Les élections présidentielles",
+      "Les élections sénatoriales directes par tous",
+      "Les élections consulaires uniquement"
+    ],
+    "answer": "Les élections municipales",
+    "explanation": "Les élections municipales permettent de désigner les conseillers municipaux, qui élisent ensuite le maire."
+  },
+  {
+    "id": "Q045B",
+    "category": "Élections",
+    "title": "Européennes",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Européennes ?",
+    "options": [
+      "Les élections européennes",
+      "Les élections départementales",
+      "Les élections municipales",
+      "Les élections judiciaires"
+    ],
+    "answer": "Les élections européennes",
+    "explanation": "Les citoyens votent aux élections européennes pour élire leurs représentants au Parlement européen."
+  },
+  {
+    "id": "Q046B",
+    "category": "Élections",
+    "title": "Référendum",
+    "question": "AC pose une question rapide sur « Référendum ». Quelle est la bonne réponse ?",
+    "options": [
+      "Une consultation directe des citoyens sur une question",
+      "Un procès public",
+      "Une réunion d’entreprise",
+      "Un examen scolaire"
+    ],
+    "answer": "Une consultation directe des citoyens sur une question",
+    "explanation": "Le référendum permet aux citoyens de répondre directement à une question politique ou institutionnelle."
+  },
+  {
+    "id": "Q047B",
+    "category": "Élections",
+    "title": "Abstention",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Abstention ?",
+    "options": [
+      "Ne pas participer au vote",
+      "Voter deux fois",
+      "Voter blanc uniquement",
+      "Contester automatiquement le résultat"
+    ],
+    "answer": "Ne pas participer au vote",
+    "explanation": "L’abstention désigne le fait de ne pas aller voter."
+  },
+  {
+    "id": "Q048B",
+    "category": "Élections",
+    "title": "Vote blanc",
+    "question": "AC pose une question rapide sur « Vote blanc ». Quelle est la bonne réponse ?",
+    "options": [
+      "Participer au vote sans choisir de candidat ou de liste",
+      "Voter en retard",
+      "Voter pour deux candidats",
+      "Voter sans être inscrit"
+    ],
+    "answer": "Participer au vote sans choisir de candidat ou de liste",
+    "explanation": "Le vote blanc exprime une participation sans choix parmi les candidats proposés."
+  },
+  {
+    "id": "Q049B",
+    "category": "Élections",
+    "title": "Inscription électorale",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Inscription électorale ?",
+    "options": [
+      "Être inscrit sur les listes électorales",
+      "Être membre d’un parti",
+      "Être propriétaire",
+      "Avoir un diplôme supérieur"
+    ],
+    "answer": "Être inscrit sur les listes électorales",
+    "explanation": "Pour voter, il faut remplir les conditions légales et être inscrit sur les listes électorales."
+  },
+  {
+    "id": "Q050B",
+    "category": "Élections",
+    "title": "Bureau de vote",
+    "question": "AC pose une question rapide sur « Bureau de vote ». Quelle est la bonne réponse ?",
+    "options": [
+      "Dans un bureau de vote",
+      "Dans une banque",
+      "Dans un tribunal uniquement",
+      "Dans une pharmacie"
+    ],
+    "answer": "Dans un bureau de vote",
+    "explanation": "Les électeurs votent dans un bureau de vote indiqué selon leur inscription électorale."
+  },
+  {
+    "id": "Q051B",
+    "category": "Élections",
+    "title": "Candidat",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Candidat ?",
+    "options": [
+      "Les électeurs",
+      "Une seule famille",
+      "Une entreprise privée",
+      "Un tribunal avant chaque vote"
+    ],
+    "answer": "Les électeurs",
+    "explanation": "Les électeurs choisissent leurs représentants lors d’élections libres."
+  },
+  {
+    "id": "Q052B",
+    "category": "Élections",
+    "title": "Pluralisme",
+    "question": "AC pose une question rapide sur « Pluralisme ». Quelle est la bonne réponse ?",
+    "options": [
+      "L’existence de plusieurs opinions et partis",
+      "Un seul parti obligatoire",
+      "L’interdiction du débat",
+      "Le refus des élections"
+    ],
+    "answer": "L’existence de plusieurs opinions et partis",
+    "explanation": "Le pluralisme permet la diversité des opinions et des choix politiques."
+  },
+  {
+    "id": "Q053B",
+    "category": "Élections",
+    "title": "Campagne électorale",
+    "question": "Dans le cadre d’une révision civique, quelle réponse est correcte sur : Campagne électorale ?",
+    "options": [
+      "Présenter des programmes et convaincre les électeurs",
+      "Remplacer le vote",
+      "Interdire les débats",
+      "Nommer les juges"
+    ],
+    "answer": "Présenter des programmes et convaincre les électeurs",
+    "explanation": "La campagne permet aux candidats de présenter leurs idées et aux électeurs de comparer les projets."
+  }
+];
+
+const CATEGORY_VISUALS = {
+  "Symboles et valeurs": { icon:"⚜️", color1:"#243f73", color2:"#f0c866" },
+  "Institutions": { icon:"🏛️", color1:"#172554", color2:"#7bb7ff" },
+  "Élections": { icon:"🗳️", color1:"#23395d", color2:"#dbeafe" },
+  "Droits et libertés": { icon:"⚖️", color1:"#164e63", color2:"#a5f3fc" },
+  "Devoirs citoyens": { icon:"🤝", color1:"#14532d", color2:"#86efac" },
+  "Laïcité": { icon:"🕊️", color1:"#312e81", color2:"#c4b5fd" },
+  "Histoire": { icon:"📜", color1:"#7c2d12", color2:"#fed7aa" },
+  "Europe": { icon:"🇪🇺", color1:"#1e3a8a", color2:"#fde68a" },
+  "Administration": { icon:"🏢", color1:"#334155", color2:"#cbd5e1" },
+  "Justice": { icon:"👩‍⚖️", color1:"#111827", color2:"#f9fafb" },
+  "Éducation": { icon:"🎓", color1:"#581c87", color2:"#e9d5ff" },
+  "Travail": { icon:"💼", color1:"#78350f", color2:"#fde68a" },
+  "Social": { icon:"🛡️", color1:"#064e3b", color2:"#a7f3d0" },
+  "Vie citoyenne": { icon:"🌍", color1:"#0f766e", color2:"#ccfbf1" }
+};
+
+let selectedName = localStorage.getItem("ac_quiz_name") || "Léonie";
+let currentQuiz = [];
+let currentIndex = 0;
+let answers = [];
+let attempts = Number(localStorage.getItem("ac_quiz_attempts") || 0);
+let lastIds = JSON.parse(localStorage.getItem("ac_quiz_last_ids") || "[]");
+
+const $ = id => document.getElementById(id);
+const home = $("home"), quiz = $("quiz"), result = $("result");
+
+function escapeHtml(str){ return String(str).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function shuffle(arr){ const a=[...arr]; for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function visualSvg(category, big=false){
+  const v = CATEGORY_VISUALS[category] || {icon:"📘", color1:"#111827", color2:"#f0c866"};
+  const iconSize = big ? 94 : 72;
+  return `<svg viewBox="0 0 900 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(category)}">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${v.color1}"/><stop offset="1" stop-color="${v.color2}"/></linearGradient></defs>
+    <rect width="900" height="320" fill="url(#g)"/><circle cx="760" cy="70" r="120" fill="rgba(255,255,255,.18)"/><circle cx="115" cy="255" r="160" fill="rgba(255,255,255,.11)"/>
+    <text x="50%" y="44%" text-anchor="middle" dominant-baseline="middle" font-size="${iconSize}">${v.icon}</text>
+    <text x="50%" y="70%" text-anchor="middle" fill="white" font-family="Arial" font-size="38" font-weight="800">${escapeHtml(category)}</text>
+  </svg>`;
+}
+function renderHomeVisual(){ $("homeVisual").innerHTML = visualSvg("Symboles et valeurs", true); }
+
+const PLAYFUL_CATEGORIES = new Set(["Symboles et valeurs","Histoire","Europe","Vie citoyenne","Élections","Institutions","Administration","Éducation","Travail"]);
+const FUNNY_TIPS = [
+  (t,a)=>`Astuce pour ne plus jamais l’oublier : associe « ${t} » à « ${a} » et répète-le à voix haute, façon formule magique. 🪄`,
+  (t,a)=>`Petit moyen mnémo : imagine « ${t} » avec une pancarte géante sur laquelle est écrit « ${a} ». Ridicule, mais ça marche.`,
+  (t,a)=>`Retiens ça comme une punchline : « ${t} » ? Eh bien « ${a} », évidemment ! Ressors-la au prochain repas de famille.`,
+  (t,a)=>`Truc pour la mémoire : colle un post-it mental sur « ${t} » avec « ${a} » écrit en lettres capitales.`,
+  (t,a)=>`Mnémotechnique express : la prochaine fois qu’on te parle de « ${t} », ton cerveau doit crier « ${a} » avant la fin de la phrase.`,
+  (t,a)=>`Pour épater tout le monde plus tard : « ${t} », c’est « ${a} ». Sors ça d’un air détaché, effet garanti.`
+];
+const SERIOUS_TIPS = [
+  (t,a)=>`Point à retenir sérieusement : « ${t} » → ${a}. C’est une notion qui revient souvent, prends le temps de la fixer.`,
+  (t,a)=>`Repère utile : sur « ${t} », la bonne réponse est « ${a} ». Relis l’explication une seconde fois si besoin.`,
+  (t,a)=>`À mémoriser calmement : « ${t} » correspond à « ${a} ». Ce sujet mérite d’être bien compris, pas seulement appris par cœur.`,
+  (t,a)=>`Pense-bête : garde en tête que « ${t} » = « ${a} ». Reviens-y si le doute revient au prochain quiz.`
+];
+function generateMemoTip(q){
+  const pool = PLAYFUL_CATEGORIES.has(q.category) ? FUNNY_TIPS : SERIOUS_TIPS;
+  const pick = pool[Math.floor(Math.random()*pool.length)];
+  return pick(q.title, q.answer);
+}
+
+function shapeSvg(ok){
+  if(ok){
+    return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="okg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8ef0bb"/><stop offset="1" stop-color="#1fae63"/></linearGradient></defs>
+      <circle cx="60" cy="60" r="54" fill="url(#okg)"/>
+      <path d="M35 62 L52 79 L86 42" stroke="#08221a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>`;
+  }
+  return `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+    <defs><linearGradient id="kog" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffb199"/><stop offset="1" stop-color="#ff6b6b"/></linearGradient></defs>
+    <circle cx="60" cy="60" r="54" fill="url(#kog)"/>
+    <path d="M42 42 L78 78 M78 42 L42 78" stroke="#3a0e0e" stroke-width="9" stroke-linecap="round"/>
+  </svg>`;
+}
+function confettiHtml(){
+  const colors = ['#f0c866','#7bb7ff','#44d07b','#ff9fb2','#c4b5fd'];
+  let html = '';
+  for(let i=0;i<14;i++){
+    const angle = Math.random()*Math.PI*2;
+    const dist = 55 + Math.random()*55;
+    const dx = Math.cos(angle)*dist;
+    const dy = Math.sin(angle)*dist - 15;
+    const rot = Math.floor(Math.random()*360);
+    const color = colors[i % colors.length];
+    const delay = (Math.random()*0.15).toFixed(2);
+    html += `<span style="background:${color};--dx:${dx.toFixed(0)}px;--dy:${dy.toFixed(0)}px;--rot:${rot}deg;animation-delay:${delay}s"></span>`;
+  }
+  return `<div class="confetti">${html}</div>`;
+}
+function showAnswerPopup(q, ok){
+  $("popupShape").innerHTML = shapeSvg(ok) + (ok ? confettiHtml() : '');
+  const titleEl = $("popupTitle");
+  titleEl.textContent = ok ? "Bonne réponse !" : "Pas tout à fait…";
+  titleEl.className = `popup-title ${ok ? 'ok' : 'ko'}`;
+  $("popupAnswer").innerHTML = ok
+    ? escapeHtml(q.explanation)
+    : `Réponse correcte : <b>${escapeHtml(q.answer)}</b><br>${escapeHtml(q.explanation)}`;
+  $("popupTip").innerHTML = `💡 ${escapeHtml(generateMemoTip(q))}`;
+  $("popupContinueBtn").textContent = (currentIndex === QUIZ_SIZE - 1) ? "Voir la correction finale" : "Question suivante";
+  $("popupOverlay").classList.add('open');
+}
+function closeAnswerPopup(){
+  $("popupOverlay").classList.remove('open');
+  currentIndex++;
+  if(currentIndex >= QUIZ_SIZE) finishQuiz(); else renderQuestion();
+}
+function updateNameButtons(){
+  document.querySelectorAll('.choice').forEach(btn => btn.classList.toggle('active', btn.dataset.name === selectedName));
+  $("studentPill").textContent = `Candidate : ${selectedName}`;
+}
+
+document.querySelectorAll('.choice').forEach(btn => btn.addEventListener('click', () => {
+  selectedName = btn.dataset.name; localStorage.setItem("ac_quiz_name", selectedName); updateNameButtons();
+}));
+
+function makeQuestion(raw){ return {...raw, shuffledOptions: shuffle(raw.options)}; }
+function pickQuiz(){
+  let pool = QUESTION_BANK.filter(q => !lastIds.includes(q.id));
+  if(pool.length < QUIZ_SIZE) pool = QUESTION_BANK;
+  const selected = shuffle(pool).slice(0, QUIZ_SIZE).map(makeQuestion);
+  lastIds = selected.map(q => q.id);
+  localStorage.setItem("ac_quiz_last_ids", JSON.stringify(lastIds));
+  return selected;
+}
+function startQuiz(){
+  currentQuiz = pickQuiz(); currentIndex = 0; answers = [];
+  attempts += 1; localStorage.setItem("ac_quiz_attempts", String(attempts));
+  home.style.display = "none"; result.style.display = "none"; quiz.style.display = "block";
+  renderQuestion(); window.scrollTo({top:0, behavior:"smooth"});
+}
+function renderQuestion(){
+  const q = currentQuiz[currentIndex];
+  $("questionPill").textContent = `Question ${currentIndex+1}/${QUIZ_SIZE}`;
+  $("bankPill").textContent = `Banque : ${QUESTION_BANK.length} questions`;
+  $("progressFill").style.width = `${(currentIndex/QUIZ_SIZE)*100}%`;
+  $("categoryLabel").textContent = q.category;
+  $("questionText").textContent = q.question;
+  $("questionVisual").innerHTML = visualSvg(q.category);
+  $("options").innerHTML = q.shuffledOptions.map(opt => `<button class="option" type="button" data-answer="${escapeHtml(opt)}">${escapeHtml(opt)}</button>`).join("");
+  document.querySelectorAll('.option').forEach(btn => btn.addEventListener('click', onOptionClick));
+}
+function onOptionClick(e){
+  const chosenBtn = e.currentTarget;
+  const q = currentQuiz[currentIndex];
+  const answer = chosenBtn.dataset.answer;
+  answers[currentIndex] = answer;
+  const ok = answer === q.answer;
+  document.querySelectorAll('.option').forEach(btn => {
+    btn.disabled = true;
+    if(btn.dataset.answer === q.answer) btn.classList.add('correct');
+    else if(btn === chosenBtn) btn.classList.add('incorrect');
+    else btn.classList.add('dimmed');
+  });
+  showAnswerPopup(q, ok);
+}
+function finishQuiz(){
+  $("progressFill").style.width = "100%";
+  quiz.style.display = "none"; result.style.display = "block";
+  const good = currentQuiz.reduce((n,q,i)=> n + (answers[i] === q.answer ? 1 : 0), 0);
+  const bad = QUIZ_SIZE - good;
+  $("scoreText").textContent = `${good}/${QUIZ_SIZE}`;
+  $("goodStat").textContent = good; $("badStat").textContent = bad; $("attemptStat").textContent = attempts;
+  $("resultMessage").textContent = resultMessage(good);
+  $("review").innerHTML = currentQuiz.map((q,i) => {
+    const ok = answers[i] === q.answer;
+    return `<div class="review-item ${ok?'correct':'wrong'}">
+      <div class="review-head"><span>${i+1}. ${escapeHtml(q.question)}</span><span class="${ok?'ok':'ko'}">${ok?'Correct':'À revoir'}</span></div>
+      <div class="small">Réponse de ${escapeHtml(selectedName)} : <b>${escapeHtml(answers[i] || 'Aucune')}</b></div>
+      ${ok ? '' : `<div class="small">Bonne réponse : <b>${escapeHtml(q.answer)}</b></div>`}
+      <div class="explain">${escapeHtml(q.explanation)}</div>
+    </div>`;
+  }).join("");
+  saveLastResult(); window.scrollTo({top:0, behavior:"smooth"});
+}
+function resultMessage(score){
+  if(score <= 10) return `${selectedName}, il faut reprendre les bases. L’objectif n’est pas d’aller vite, mais de comprendre les corrections.`;
+  if(score <= 18) return `${selectedName}, c’est correct, mais il reste encore trop d’hésitations. Relance un nouveau quiz.`;
+  if(score <= 24) return `${selectedName}, bon niveau. Les bases sont là, il faut maintenant sécuriser les détails.`;
+  if(score <= 29) return `${selectedName}, très solide. Encore une ou deux séries et ce sera vraiment propre.`;
+  return `${selectedName}, 30/30. Série validée. AC peut être fier de cette révision.`;
+}
+function summaryText(){
+  const good = currentQuiz.reduce((n,q,i)=> n + (answers[i] === q.answer ? 1 : 0), 0);
+  let txt = `Quiz civique préparé par AC\nCandidate : ${selectedName}\nScore : ${good}/${QUIZ_SIZE}\nTentative : ${attempts}\n\n`;
+  currentQuiz.forEach((q,i)=>{ txt += `${i+1}. ${q.question}\nRéponse : ${answers[i]}\nBonne réponse : ${q.answer}\nExplication : ${q.explanation}\n\n`; });
+  return txt;
+}
+function saveLastResult(){ localStorage.setItem("ac_quiz_last_result", summaryText()); }
+function copyResult(){ navigator.clipboard.writeText(summaryText()).then(()=>alert("Résultat copié.")); }
+function downloadResult(){
+  const blob = new Blob([summaryText()], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download=`correction-${selectedName.toLowerCase()}-quiz-civique.txt`; a.click(); URL.revokeObjectURL(url);
+}
+function sendWhatsApp(){ window.open(`https://wa.me/${AC_WHATSAPP}?text=${encodeURIComponent(summaryText())}`, '_blank'); }
+function clearHistory(){ if(confirm("Effacer l’historique local des tentatives ?")){ localStorage.removeItem("ac_quiz_attempts"); localStorage.removeItem("ac_quiz_last_ids"); localStorage.removeItem("ac_quiz_last_result"); attempts=0; lastIds=[]; alert("Historique effacé."); } }
+
+$("startBtn").addEventListener('click', startQuiz);
+$("newQuizBtn").addEventListener('click', startQuiz);
+$("copyBtn").addEventListener('click', copyResult);
+$("downloadBtn").addEventListener('click', downloadResult);
+$("whatsappBtn").addEventListener('click', sendWhatsApp);
+$("clearBtn").addEventListener('click', clearHistory);
+$("popupContinueBtn").addEventListener('click', closeAnswerPopup);
+document.addEventListener('keydown', e => {
+  if(e.key === 'Enter' && $("popupOverlay").classList.contains('open')) closeAnswerPopup();
+});
+renderHomeVisual(); updateNameButtons();
+</script>
+</body>
+</html>
